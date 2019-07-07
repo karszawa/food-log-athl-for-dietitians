@@ -1,8 +1,12 @@
 {
-  "extends": "universe",
+  "extends": ["universe", "prettier"],
   "globals": {
     "__DEV__": false
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react", "import", "jsx-a11y"]
+  "plugins": ["react", "import", "jsx-a11y"],
+  "rules": {
+    "react/jsx-uses-react": [1],
+    "react/jsx-uses-vars": [2]
+  }
 }
