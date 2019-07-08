@@ -1,9 +1,9 @@
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import SignInPage from '../pages/SignIn';
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import SignInScreen from "../screens/SignInScreen";
 
 const navigator = createStackNavigator({
   SignIn: {
-    screen: SignInPage,
+    screen: SignInScreen,
   },
 });
 
