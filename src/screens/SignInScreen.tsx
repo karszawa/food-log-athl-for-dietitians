@@ -1,11 +1,14 @@
 import React, { useState, useCallback } from "react";
-import { Input, Button, Text } from "react-native-elements";
+import { Input, Button } from "react-native-elements";
 import { NavigationScreenComponent } from "react-navigation";
+import styled from "styled-components/native";
+import { Title, Card } from "native-base";
 import { Container } from "../styles/layout";
 import { signIn } from "../slices/auth";
 
 const strings = {
-  guideText: `"FLAD: FoodLog Athl for Dietitians" は FoodLog Athl の管理栄養士向けアプリです。ご利用登録はWebサイトからお申し込みください。`,
+  title: "FoodLog Athl",
+  guideText: `サインイン`,
 };
 
 interface Params {}
@@ -22,17 +25,19 @@ const SignInPage: NavigationScreenComponent<Params, {}, Props> = () => {
   }, [username, password]);
 
   return (
-    <Container style={{ padding: 16 }}>
-      <Text>{strings.guideText}</Text>
-      <UserNameInput value={username} onChangeText={setUsername} />
-      <PasswordInput value={password} onChangeText={setPassword} />
-      <SubmitButton onPress={onPressSubmitButton} />
-    </Container>
+    <StyledContainer>
+      <StyledCard>
+        <StyledTitle>{strings.guideText}</StyledTitle>
+        <UserNameInput value={username} onChangeText={setUsername} />
+        <PasswordInput value={password} onChangeText={setPassword} />
+        <SubmitButton onPress={onPressSubmitButton} />
+      </StyledCard>
+    </StyledContainer>
   );
 };
 
 SignInPage.navigationOptions = {
-  title: "Sign In",
+  title: strings.title,
 };
 
 const UserNameInput = (props: any) => (
@@ -57,7 +62,19 @@ const PasswordInput = (props: any) => (
 );
 
 const SubmitButton = (props: any) => (
-  <Button {...props} style={{ marginTop: 64 }} title="Submit" />
+  <Button {...props} style={{ marginTop: 48 }} title="Submit" />
 );
+
+const StyledContainer = styled(Container)`
+  padding: 16px;
+`;
+
+const StyledCard = styled(Card)`
+  padding: 16px;
+`;
+
+const StyledTitle = styled(Title)`
+  margin-bottom: 24px;
+`;
 
 export default SignInPage;
