@@ -1,10 +1,14 @@
-import React, { useState, useCallback } from "react";
-import { Input, Button } from "react-native-elements";
+import React, { useState, useCallback, useEffect } from "react";
+import { Input, Button, Text } from "react-native-elements";
 import { NavigationScreenComponent } from "react-navigation";
 import styled from "styled-components/native";
 import { Title, Card } from "native-base";
+import { useSelector } from "react-redux";
 import { Container } from "../styles/layout";
-import { signIn } from "../slices/auth";
+import { signIn, restoreSession } from "../slices/auth";
+import { RootState } from "../slices/store";
+import { OverlayLoading } from "../components/Loading";
+import { HomeScreenId } from "../navigation/screen-names";
 
 const strings = {
   title: "FoodLog Athl",
@@ -15,7 +19,7 @@ interface Params {}
 
 interface Props {}
 
-const SignInPage: NavigationScreenComponent<Params, {}, Props> = () => {
+const SignInPage: NavigationScreenComponent<Params, {}, Props> = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const onPressSubmitButton = useCallback(() => {
@@ -23,15 +27,28 @@ const SignInPage: NavigationScreenComponent<Params, {}, Props> = () => {
     console.log(`password: ${password}`);
     signIn({ username, password });
   }, [username, password]);
+  useEffect(() => {
+    restoreSession();
+  });
+  const { processing, errors, authenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
+  if (authenticated) {
+    props.navigation.navigate(HomeScreenId);
+  }
 
   return (
     <StyledContainer>
       <StyledCard>
         <StyledTitle>{strings.guideText}</StyledTitle>
         <UserNameInput value={username} onChangeText={setUsername} />
+        {errors && errors.username && <Text>ユーザー名が間違っています</Text>}
         <PasswordInput value={password} onChangeText={setPassword} />
+        {errors && errors.password && <Text>パスワードが間違っています</Text>}
         <SubmitButton onPress={onPressSubmitButton} />
       </StyledCard>
+
+      {processing && <OverlayLoading />}
     </StyledContainer>
   );
 };

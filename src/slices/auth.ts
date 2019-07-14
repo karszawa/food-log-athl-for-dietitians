@@ -1,26 +1,20 @@
+import SecureStore from "expo-secure-store";
 import { createSlice, PayloadAction } from "redux-starter-kit";
+import FooLogAPIClient from "../lib/foolog-api-client";
 
 export interface State {
   username: string;
   password: string;
-  token: string;
-  token_secret: string;
-  expiry_time: string;
-  refresh_token: string;
-  refresh_token_secret: string;
-  refresh_token_expiry_time: string;
+  authenticated: boolean;
+  processing: boolean;
   errors?: { [key in "username" | "password"]: string };
 }
 
 const initialState: State = {
   username: "",
   password: "",
-  token: "",
-  token_secret: "",
-  expiry_time: "",
-  refresh_token: "",
-  refresh_token_secret: "",
-  refresh_token_expiry_time: "",
+  authenticated: false,
+  processing: false,
 };
 
 interface SignInPayload {
@@ -33,17 +27,43 @@ const slice = createSlice({
   reducers: {
     signOut(state: State) {
       Object.assign(state, initialState);
+      SecureStore.deleteItemAsync("username");
+      SecureStore.deleteItemAsync("password");
     },
     signIn(state: State, action: PayloadAction<SignInPayload>) {
+      state.processing = true;
       const { username, password } = action.payload;
 
-      // NOTE: Instead of API Call
-      setTimeout(() => {
-        Object.assign(state, { username, password });
-      }, 3000);
+      FooLogAPIClient.postSession({ username, password })
+        .then(() => {
+          console.log("after post session");
+          state.username = username;
+          state.password = password;
+          state.authenticated = true;
+          state.processing = false;
+          SecureStore.getItemAsync("username");
+          SecureStore.getItemAsync("password");
+        })
+        .catch(e => {
+          state.errors.password = e.code;
+        });
+    },
+    restoreSession(state: State) {
+      (async () => {
+        state.processing = true;
+        const username = await SecureStore.getItemAsync("username");
+        const password = await SecureStore.getItemAsync("password");
+
+        FooLogAPIClient.postSession({ username, password }).then(() => {
+          state.username = username;
+          state.password = password;
+          state.authenticated = true;
+          state.processing = false;
+        });
+      })();
     },
   },
 });
 
-export const { signOut, signIn } = slice.actions;
+export const { signOut, signIn, restoreSession } = slice.actions;
 export default slice;

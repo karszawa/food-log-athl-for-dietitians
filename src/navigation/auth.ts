@@ -1,10 +1,10 @@
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import SignInPage from "../pages/SignIn";
+import { createStackNavigator } from "react-navigation";
+import SignInPage from "../screens/SignInScreen";
 
 const navigator = createStackNavigator({
   SignIn: {
-    screen: SignInPage
-  }
+    screen: SignInPage,
+  },
 });
 
 export default navigator;
