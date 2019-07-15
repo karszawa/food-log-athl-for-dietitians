@@ -12,7 +12,7 @@ import { Container } from "../styles/layout";
 import { signIn, restoreSession } from "../slices/auth";
 import { RootState } from "../slices/store";
 import { OverlayLoading } from "../components/Loading";
-import { HomeScreenId } from "../navigation/screen-names";
+import { HomeScreenName } from "../navigation/screen-names";
 
 const strings = {
   title: "FoodLog Athl",
@@ -71,7 +71,7 @@ const useRouter = ({ navigation }: RouterProps) => {
   const { authenticated } = useSelector((state: RootState) => state.auth);
 
   if (authenticated) {
-    navigation.navigate(HomeScreenId);
+    navigation.navigate(HomeScreenName);
   }
 };
 

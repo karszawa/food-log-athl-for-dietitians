@@ -1,2 +1,2 @@
-export const SignInScreenId = "SignInScreenId";
-export const HomeScreenId = "HomeScreenId";
+export const SignInScreenName = "SignInScreenName";
+export const HomeScreenName = "HomeScreenName";

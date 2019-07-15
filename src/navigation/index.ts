@@ -1,19 +1,14 @@
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import SignInScreen from "../screens/SignInScreen";
-import Home from "../screens/HomeScreen";
-import { SignInScreenId, HomeScreenId } from "./screen-names";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import AuthNavigator from "./auth";
+import MainNavigator from "./main";
 
-const navigator = createStackNavigator(
+const navigator = createSwitchNavigator(
   {
-    [SignInScreenId]: {
-      screen: SignInScreen,
-    },
-    [HomeScreenId]: {
-      screen: Home,
-    },
+    Auth: AuthNavigator,
+    Main: MainNavigator,
   },
   {
-    initialRouteName: SignInScreenId,
+    initialRouteName: "Auth",
   }
 );
 

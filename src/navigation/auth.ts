@@ -1,10 +1,16 @@
 import { createStackNavigator } from "react-navigation";
-import SignInPage from "../screens/SignInScreen";
+import SignInScreen from "../screens/SignInScreen";
+import { SignInScreenName } from "./screen-names";
 
-const navigator = createStackNavigator({
-  SignIn: {
-    screen: SignInPage,
+const navigator = createStackNavigator(
+  {
+    [SignInScreenName]: {
+      screen: SignInScreen,
+    },
   },
-});
+  {
+    initialRouteName: SignInScreenName,
+  }
+);
 
 export default navigator;
