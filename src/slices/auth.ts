@@ -48,8 +48,7 @@ const slice = createSlice({
       state.processing = false;
     },
     setError(state: State, action: PayloadAction<SetErrorPayload>) {
-      state.errors.username = action.payload.username;
-      state.errors.password = action.payload.password;
+      state.errors = action.payload;
     },
   },
 });
@@ -76,7 +75,7 @@ export const signIn = createAction<SignInPayload>(SIGN_IN);
 function* handleSignIn(action: PayloadAction<SignInPayload>) {
   try {
     yield put(startFetch());
-    yield call(FooLogAPIClient.postSession, action.payload);
+    yield call([FooLogAPIClient, FooLogAPIClient.postSession], action.payload);
     yield put(authenticate(action.payload));
   } catch (e) {
     if (extendsRequestError(e)) {
@@ -98,8 +97,14 @@ export const restoreSession = createAction<RestoreSessionPayload>(
 );
 
 function* handleRestoreSession() {
-  const username = yield call(SecureStore.getItemAsync, "username");
-  const password = yield call(SecureStore.getItemAsync, "password");
+  const username = yield call(
+    [SecureStore, SecureStore.getItemAsync],
+    "username"
+  );
+  const password = yield call(
+    [SecureStore, SecureStore.getItemAsync],
+    "password"
+  );
 
   if (!username || !password) {
     return;
@@ -135,13 +140,21 @@ function* handleSessionError(action: PayloadAction<SessionErrorPayload>) {
 }
 
 function* handleAuthenticate(action: PayloadAction<AuthenticatePayload>) {
-  yield call(SecureStore.setItemAsync, "username", action.payload.username);
-  yield call(SecureStore.setItemAsync, "password", action.payload.password);
+  yield call(
+    [SecureStore, SecureStore.setItemAsync],
+    "username",
+    action.payload.username
+  );
+  yield call(
+    [SecureStore, SecureStore.setItemAsync],
+    "password",
+    action.payload.password
+  );
 }
 
 function* handleSignOut() {
-  yield call(SecureStore.deleteItemAsync, "username");
-  yield call(SecureStore.deleteItemAsync, "password");
+  yield call([SecureStore, SecureStore.deleteItemAsync], "username");
+  yield call([SecureStore, SecureStore.deleteItemAsync], "password");
 }
 
 export function* rootSaga() {
