@@ -1,9 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Input, Button, Text } from "react-native-elements";
-import { NavigationScreenComponent } from "react-navigation";
+import { Input, Button } from "react-native-elements";
+import {
+  NavigationScreenComponent,
+  NavigationRoute,
+  NavigationScreenProp,
+} from "react-navigation";
 import styled from "styled-components/native";
 import { Title, Card } from "native-base";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Container } from "../styles/layout";
 import { signIn, restoreSession } from "../slices/auth";
 import { RootState } from "../slices/store";
@@ -22,34 +26,36 @@ interface Props {}
 const SignInPage: NavigationScreenComponent<Params, {}, Props> = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { processing, errors } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
   const onPressSubmitButton = useCallback(() => {
-    console.log(`username: ${username}`);
-    console.log(`password: ${password}`);
-    signIn({ username, password });
+    dispatch(signIn({ username, password }));
   }, [username, password]);
   useEffect(() => {
-    restoreSession();
+    dispatch(restoreSession());
   });
-  const { processing, errors, authenticated } = useSelector(
-    (state: RootState) => state.auth
-  );
-  if (authenticated) {
-    props.navigation.navigate(HomeScreenId);
-  }
+  useRouter({ navigation: props.navigation });
 
   return (
-    <StyledContainer>
-      <StyledCard>
-        <StyledTitle>{strings.guideText}</StyledTitle>
-        <UserNameInput value={username} onChangeText={setUsername} />
-        {errors && errors.username && <Text>ユーザー名が間違っています</Text>}
-        <PasswordInput value={password} onChangeText={setPassword} />
-        {errors && errors.password && <Text>パスワードが間違っています</Text>}
-        <SubmitButton onPress={onPressSubmitButton} />
-      </StyledCard>
-
-      {processing && <OverlayLoading />}
-    </StyledContainer>
+    <>
+      <StyledContainer>
+        <StyledCard>
+          <StyledTitle>{strings.guideText}</StyledTitle>
+          <UserNameInput
+            value={username}
+            onChangeText={setUsername}
+            errorMessage={errors && errors.username}
+          />
+          <PasswordInput
+            value={password}
+            onChangeText={setPassword}
+            errorMessage={errors && errors.password}
+          />
+          <SubmitButton onPress={onPressSubmitButton} />
+        </StyledCard>
+      </StyledContainer>
+      <OverlayLoading isVisible={processing} />
+    </>
   );
 };
 
@@ -57,11 +63,23 @@ SignInPage.navigationOptions = {
   title: strings.title,
 };
 
+interface RouterProps {
+  navigation: NavigationScreenProp<NavigationRoute>;
+}
+
+const useRouter = ({ navigation }: RouterProps) => {
+  const { authenticated } = useSelector((state: RootState) => state.auth);
+
+  if (authenticated) {
+    navigation.navigate(HomeScreenId);
+  }
+};
+
 const UserNameInput = (props: any) => (
   <Input
     {...props}
     containerStyle={{ marginTop: 4 }}
-    placeholder="User Name"
+    placeholder="ユーザー名"
     leftIcon={{ type: "material", name: "person" }}
     leftIconContainerStyle={{ paddingRight: 12 }}
   />
@@ -72,7 +90,7 @@ const PasswordInput = (props: any) => (
     {...props}
     secureTextEntry
     containerStyle={{ marginTop: 16 }}
-    placeholder="Password"
+    placeholder="パスワード"
     leftIcon={{ type: "material", name: "vpn-key" }}
     leftIconContainerStyle={{ paddingRight: 12 }}
   />

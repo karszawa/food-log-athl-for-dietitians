@@ -58,26 +58,29 @@ export default class FooLogAPIClient {
   }
 
   // API0101
-  static async postSession({ username, password }) {
-    const request = await this.authenticate(
-      new Request(`${BASE_URL}/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+  static async postSession({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) {
+    const response = await fetch(`${BASE_URL}/session`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        api: {
+          login_id: username,
+          password,
         },
-        body: JSON.stringify({
-          api: {
-            login_id: username,
-            password,
-          },
-          app_id: APP_ID,
-          device_id: this.deviceId,
-          platform: this.platform,
-        }),
-      })
-    );
+        app_id: APP_ID,
+        device_id: this.deviceId,
+        platform: this.platform,
+      }),
+    });
 
-    const response = await fetch(request);
     const data: PostSessionResponseData = await response.json();
 
     switch (response.status) {

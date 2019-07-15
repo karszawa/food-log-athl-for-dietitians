@@ -4,11 +4,16 @@ import { ActivityIndicator } from "react-native";
 
 export const Loading = () => <ActivityIndicator size="large" />;
 
-export const OverlayLoading = () => (
-  <Container>
-    <Loading />
-  </Container>
-);
+interface OverlayLoadingProps {
+  isVisible: boolean;
+}
+
+export const OverlayLoading = ({ isVisible }: OverlayLoadingProps) =>
+  isVisible ? (
+    <Container>
+      <Loading />
+    </Container>
+  ) : null;
 
 const Container = styled.View`
   position: absolute;
