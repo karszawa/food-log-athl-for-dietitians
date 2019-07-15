@@ -75,7 +75,10 @@ export const signIn = createAction<SignInPayload>(SIGN_IN);
 function* handleSignIn(action: PayloadAction<SignInPayload>) {
   try {
     yield put(startFetch());
-    yield call([FooLogAPIClient, FooLogAPIClient.postSession], action.payload);
+    yield call(
+      [FooLogAPIClient, FooLogAPIClient.postDietitiansSession],
+      action.payload
+    );
     yield put(authenticate(action.payload));
   } catch (e) {
     if (extendsRequestError(e)) {
@@ -122,17 +125,17 @@ export const sessionError = createAction<SessionErrorPayload>(SESSION_ERROR);
 function* handleSessionError(action: PayloadAction<SessionErrorPayload>) {
   const { code } = action.payload;
   switch (code) {
-    case "E0101400002":
+    case "E7101400002":
       return yield put(
         setError({ username: "ユーザー名のフォーマットが間違っています" })
       );
-    case "E0101400003":
+    case "E7101400003":
       return yield put(
         setError({ password: "パスワードのフォーマットが間違っています" })
       );
-    case "E0101401014":
+    case "E7101401010":
       return yield put(setError({ password: "ログインに失敗しました" }));
-    case "E0101401015":
+    case "E7101401011":
       return yield put(setError({ username: "退会済みのユーザーです" }));
   }
 

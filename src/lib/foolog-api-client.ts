@@ -1,6 +1,6 @@
 import Constants from "expo-constants";
 import { sha256 } from "js-sha256";
-import { BASE_URL, APP_ID } from "../constants";
+import { BASE_URL, APP_ID, SECRET_KEY } from "../constants";
 import { NotAuthenticatedError, BadRequest, InvalidRequest } from "./error";
 
 type Auth = {
@@ -31,7 +31,7 @@ interface PostSessionResponseData extends ResponseData {
 
 export default class FooLogAPIClient {
   static platform = "iOS";
-  static deviceId = sha256(Constants.deviceId);
+  static deviceId = sha256.hmac(SECRET_KEY, Constants.deviceId);
   static auth?: Auth;
 
   static async authenticate(request: Request): Promise<Request> {
@@ -40,7 +40,7 @@ export default class FooLogAPIClient {
     }
 
     if (this.auth.expiry_time.getTime() < Date.now()) {
-      await this.postSession({
+      await this.postDietitiansSession({
         username: this.auth.username,
         password: this.auth.password,
       });
@@ -58,14 +58,14 @@ export default class FooLogAPIClient {
   }
 
   // API0101
-  static async postSession({
+  static async postDietitiansSession({
     username,
     password,
   }: {
     username: string;
     password: string;
   }) {
-    const response = await fetch(`${BASE_URL}/session`, {
+    const response = await fetch(`${BASE_URL}/dietitians/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

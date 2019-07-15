@@ -33,7 +33,7 @@ const SignInPage: NavigationScreenComponent<Params, {}, Props> = props => {
   }, [username, password]);
   useEffect(() => {
     dispatch(restoreSession());
-  });
+  }, []);
   useRouter({ navigation: props.navigation });
 
   return (
