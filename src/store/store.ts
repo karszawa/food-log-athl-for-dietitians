@@ -1,7 +1,7 @@
 import { getDefaultMiddleware, configureStore } from "redux-starter-kit";
 import logger from "redux-logger";
 import reducer from "./reducer";
-import { State as AuthState } from "./auth";
+import { State as AuthState } from "./auth/reducer";
 import saga, { rootSaga } from "./saga";
 
 export interface RootState {

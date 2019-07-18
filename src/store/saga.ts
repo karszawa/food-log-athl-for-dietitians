@@ -1,7 +1,7 @@
 import { all } from "redux-saga/effects";
 import createSagaMiddleware from "redux-saga";
 import createSagaMiddlewareHelpers from "redux-saga-watch-actions";
-import { rootSaga as authSaga } from "./auth";
+import { rootSaga as authSaga } from "./auth/saga";
 
 const sagaMiddleware = createSagaMiddleware();
 export const runSaga = saga => sagaMiddleware.run(saga);

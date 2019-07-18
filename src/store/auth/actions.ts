@@ -10,12 +10,12 @@ export const sessionError = createAction<SessionErrorPayload>(SESSION_ERROR);
 
 export const TRY_SIGN_IN = "TRY_SIGN_IN";
 
-interface TrySignInPayload {
+export interface TrySignInPayload {
   username: string;
   password: string;
 }
 
-export const signIn = createAction<TrySignInPayload>(TRY_SIGN_IN);
+export const trySignIn = createAction<TrySignInPayload>(TRY_SIGN_IN);
 
 export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS";
 
@@ -28,17 +28,17 @@ export const signInSuccess = createAction<SignInSuccessPayload>(
   SIGN_IN_SUCCESS
 );
 
-const SIGN_IN_FAILED = "SIGN_IN_FAILED";
+export const SIGN_IN_FAILED = "SIGN_IN_FAILED";
 
 export interface SignInFailedPayload {
+  overall?: string;
   username?: string;
   password?: string;
-  overall: string;
 }
 
 export const signInFailed = createAction<SignInFailedPayload>(SIGN_IN_FAILED);
 
-const SIGN_OUT = "SIGN_OUT";
+export const SIGN_OUT = "SIGN_OUT";
 
 export interface SignOutPayload {}
 
