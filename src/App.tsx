@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import Navigation from "./navigation";
-import { createStore } from "./slices/store";
+import { createStore } from "./store";
 
 const store = createStore();
 

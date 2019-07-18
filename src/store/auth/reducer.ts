@@ -13,7 +13,7 @@ export interface State {
   password: string;
   authenticated: boolean;
   processing: boolean;
-  errors?: {
+  errors: {
     overall?: string;
     username?: string;
     password?: string;
@@ -25,6 +25,7 @@ const initialState: State = {
   password: "",
   authenticated: false,
   processing: false,
+  errors: {},
 };
 
 export default createReducer(initialState, {
@@ -38,14 +39,13 @@ export default createReducer(initialState, {
     state.username = action.payload.username;
     state.password = action.payload.password;
     state.processing = false;
+    state.authenticated = true;
   },
   [SIGN_IN_FAILED]: (
     state: State,
     action: PayloadAction<SignInFailedPayload>
   ) => {
-    state.errors.overall = action.payload.overall;
-    state.errors.username = action.payload.username;
-    state.errors.password = action.payload.password;
+    state.errors = action.payload;
     state.processing = false;
   },
 });
