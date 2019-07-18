@@ -1,7 +1,8 @@
 import Constants from "expo-constants";
 import { sha256 } from "js-sha256";
-import { BASE_URL, APP_ID, SECRET_KEY } from "../constants";
 import { NotAuthenticatedError, BadRequest, InvalidRequest } from "./error";
+
+const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
 
 type Auth = {
   username: string;

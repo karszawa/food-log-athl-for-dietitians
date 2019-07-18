@@ -10,3 +10,4 @@ web-build/
 web-report/
 
 src/constants/index.ts
+app.prod.json
