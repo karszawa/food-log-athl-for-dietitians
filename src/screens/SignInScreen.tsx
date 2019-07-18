@@ -9,8 +9,8 @@ import styled from "styled-components/native";
 import { Title, Card } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "../styles/layout";
-import { signIn, restoreSession } from "../slices/auth";
-import { RootState } from "../slices/store";
+import { trySignIn, restoreSession } from "../store/auth/actions";
+import { RootState } from "../store/store";
 import { OverlayLoading } from "../components/Loading";
 import { HomeScreenName } from "../navigation/screen-names";
 
@@ -29,7 +29,7 @@ const SignInPage: NavigationScreenComponent<Params, {}, Props> = props => {
   const { processing, errors } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const onPressSubmitButton = useCallback(() => {
-    dispatch(signIn({ username, password }));
+    dispatch(trySignIn({ username, password }));
   }, [username, password]);
   useEffect(() => {
     dispatch(restoreSession());
