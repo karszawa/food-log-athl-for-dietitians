@@ -7,8 +7,8 @@
 * ESLint / Prettier
 * Redux / Redux Saga / Redux Starter Kit
 * React Navigation
+* styled-components
 * NativeBase / React Native Elements
-* 
 
 ## Architecture
 
