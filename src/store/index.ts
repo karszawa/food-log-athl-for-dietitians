@@ -1,5 +1,4 @@
 import { getDefaultMiddleware, configureStore } from "redux-starter-kit";
-import logger from "redux-logger";
 import reducer from "./reducer";
 import { State as AuthState } from "./auth/reducer";
 import { State as DietitianState } from "./dietitian/reducer";
@@ -11,7 +10,7 @@ export interface RootState {
 }
 
 export const createStore = () => {
-  const middlewares = [...getDefaultMiddleware(), logger, saga];
+  const middlewares = [...getDefaultMiddleware(), saga];
   const store = configureStore({
     reducer,
     middleware: middlewares,

@@ -4,6 +4,7 @@ import { FETCH_DIETITIAN, fetchDietitianSuccess } from "./actions";
 
 function* handleFetchDietitian() {
   const data = yield call([FooLogAPIClient, FooLogAPIClient.getDietitians]);
+  console.log(data);
   yield put(fetchDietitianSuccess(data));
 }
 

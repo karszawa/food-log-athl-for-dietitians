@@ -15,21 +15,33 @@ function logging(method: string, path: string): Function {
     if (descriptor.value) {
       const original = descriptor.value;
 
-      descriptor.value = function(...args: any[]) {
+      descriptor.value = async function(...args: any[]) {
         console.log(`\x1b[44m${method}: ${path}\x1b[0m`);
-        const result = original.apply(this, args);
+        const result = await original.apply(this, args);
         console.log(`\x1b[36m=> ${JSON.stringify(result)}\x1b[0m`);
+        return result;
       };
     }
   };
 }
+
+type Headers = {
+  [name: string]: string;
+};
 
 export default class FooLogAPIClient {
   static platform = "iOS";
   static deviceId = sha256.hmac(SECRET_KEY, Constants.deviceId);
   static auth?: Auth;
 
-  static async authenticate(request: Request): Promise<Request> {
+  static async fetch(
+    url: string,
+    {
+      method,
+      headers,
+      body,
+    }: { method: string; headers?: Headers; body?: string }
+  ): Promise<Response> {
     if (!this.auth) {
       throw new NotAuthenticatedError();
     }
@@ -42,14 +54,19 @@ export default class FooLogAPIClient {
     }
 
     const date = new Date().toUTCString();
-    const data = `${request.method}&${date}&${request.url}`;
+    const data = `${method}&${date}&${url}`;
     const signature = sha256.hmac(this.auth.token_secret, data);
     const token = `Token token="${this.auth.token}",signature="${signature}"`;
 
-    request.headers["X-Date"] = date;
-    request.headers["Authorization"] = token;
-
-    return request;
+    return fetch(url, {
+      method,
+      headers: {
+        ...(headers || {}),
+        Date: date,
+        Authorization: token,
+      },
+      body,
+    });
   }
 
   // API0101
@@ -106,11 +123,9 @@ export default class FooLogAPIClient {
   // API0102
   @logging(DELETE, "/session")
   static async deleteSession() {
-    const request = await this.authenticate(
-      new Request(`${BASE_URL}/session`, { method: "DELETE" })
-    );
-
-    const response = await fetch(request);
+    const response = await this.fetch(`${BASE_URL}/session`, {
+      method: "DELETE",
+    });
     const data = await response.json();
 
     switch (response.status) {
@@ -128,13 +143,13 @@ export default class FooLogAPIClient {
   // API7202
   @logging(GET, "/dietitians")
   static async getDietitians() {
-    const response = await fetch(
-      await this.authenticate(
-        new Request(`${BASE_URL}/dietitians`, {
-          method: "GET",
-        })
-      )
-    );
+    const response = await this.fetch(`${BASE_URL}/dietitians`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: "",
+    });
 
     const data = await response.json();
 
