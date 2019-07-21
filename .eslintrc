@@ -1,21 +1,14 @@
 {
-  "extends": [
-    "universe",
-    "prettier",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript"
-  ],
+  "extends": ["universe", "prettier"],
   "globals": {
     "__DEV__": false
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react", "import", "jsx-a11y", "@typescript-eslint"],
+  "plugins": ["react", "jsx-a11y", "@typescript-eslint"],
   "rules": {
     "react/jsx-uses-react": [1],
     "react/jsx-uses-vars": [2],
-    "@typescript-eslint/no-unused-vars": "warn",
-    "import/order": "error"
+    "@typescript-eslint/no-unused-vars": "warn"
   },
   "env": {
     "browser": true,
