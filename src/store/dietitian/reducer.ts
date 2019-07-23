@@ -4,7 +4,7 @@ import {
   FETCH_DIETITIAN_SUCCESS,
   FetchDietitianSuccessPayload,
 } from "./actions";
-import { User } from "../../lib/foodlog-api-client";
+import { User } from "../../lib/foolog-api-client.d";
 
 export interface State {
   users: User[];

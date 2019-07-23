@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import { sha256 } from "js-sha256";
 import { NotAuthenticatedError, BadRequest, InvalidRequest } from "./error";
-import { Auth, PostSessionResponseData } from "./foodlog-api-client";
+import { Auth, PostSessionResponseData } from "./foolog-api-client.d";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
 const [GET, POST, PUT, DELETE] = ["GET", "POST", "PUT", "DELETE"];

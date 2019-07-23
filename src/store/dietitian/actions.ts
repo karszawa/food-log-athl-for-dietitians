@@ -1,5 +1,5 @@
 import { createAction } from "redux-starter-kit";
-import { GetDietitiansData } from "../../lib/foodlog-api-client";
+import { GetDietitiansData } from "../../lib/foolog-api-client.d";
 
 export const FETCH_DIETITIAN = "FETCH_DIETITIAN";
 

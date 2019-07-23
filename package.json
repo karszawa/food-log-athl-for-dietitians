@@ -12,6 +12,7 @@
     "expo": "^33.0.0",
     "expo-constants": "^5.0.1",
     "expo-secure-store": "^5.0.1",
+    "firebase": "^6.3.1",
     "js-sha256": "^0.9.0",
     "native-base": "^2.12.1",
     "object-dig": "^0.1.3",
