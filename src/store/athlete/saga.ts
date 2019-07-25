@@ -1,6 +1,7 @@
 import { take, put, takeEvery } from "redux-saga/effects";
 import { PayloadAction } from "redux-starter-kit";
 import { eventChannel } from "redux-saga";
+import dayjs from "dayjs";
 import {
   SUBSCRIBE_ATHLETE_MESSAGE,
   SubscribeAthleteMessagePayload,
@@ -13,13 +14,16 @@ function* handleSubscribeAthleteMessage(
   action: PayloadAction<SubscribeAthleteMessagePayload>
 ) {
   const { athleteId } = action.payload;
+  const endAt = dayjs()
+    .subtract(12, "month")
+    .toDate();
 
   const channel = eventChannel<{ data: firebase.firestore.DocumentChange }>(
     emitter =>
       db
         .collection(`users/${athleteId}/messages`)
         .orderBy("ts", "desc")
-        .endAt(this.startDate.toJSDate())
+        .endAt(endAt)
         .onSnapshot(snapshot => {
           snapshot.docChanges().forEach(change => {
             emitter({ data: change });
@@ -40,12 +44,13 @@ function* handleSubscribeAthleteMessage(
         yield put(
           addAthleteMessage({
             id: change.doc.id,
+            athleteId,
             message: change.doc.data(),
           })
         );
         break;
       case "removed":
-        yield put(deleteAthleteMessage({ id: change.doc.id }));
+        yield put(deleteAthleteMessage({ id: change.doc.id, athleteId }));
         break;
     }
   }

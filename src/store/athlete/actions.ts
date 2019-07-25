@@ -7,7 +7,7 @@ export interface SubscribeAthleteMessagePayload {
   athleteId: string;
 }
 
-export const subscribeAthleteMessagePayload = createAction<
+export const subscribeAthleteMessage = createAction<
   SubscribeAthleteMessagePayload
 >(SUBSCRIBE_ATHLETE_MESSAGE);
 
@@ -15,6 +15,7 @@ export const ADD_ATHLETE_MESSAGE = "ADD_ATHLETE_MESSAGE";
 
 export interface AddAthleteMessagePayload {
   id: string;
+  athleteId: string;
   message: Message;
 }
 
@@ -26,6 +27,7 @@ export const DELETE_ATHLETE_MESSAGE = "DELETE_ATHLETE_MESSAGE";
 
 export interface DeleteAthleteMessagePayload {
   id: string;
+  athleteId: string;
 }
 
 export const deleteAthleteMessage = createAction<DeleteAthleteMessagePayload>(

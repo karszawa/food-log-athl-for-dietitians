@@ -1,7 +1,8 @@
 import { createStackNavigator } from "react-navigation";
 // import { fromLeft, flipY } from "react-navigation-transitions";
-import { AthleteListScreenName } from "./screen-names";
+import { AthleteListScreenName, AthleteDetailScreenName } from "./screen-names";
 import AthleteListScreen from "../screens/AthleteListScreen";
+import { AthleteDetailScreen } from "../screens/AthleteDetailScreen";
 
 // const handleCustomTransition = ({ scenes }) => {
 //   const prevScene = scenes[scenes.length - 2];
@@ -22,6 +23,9 @@ import AthleteListScreen from "../screens/AthleteListScreen";
 const navigator = createStackNavigator({
   [AthleteListScreenName]: {
     screen: AthleteListScreen,
+  },
+  [AthleteDetailScreenName]: {
+    screen: AthleteDetailScreen,
   },
 });
 

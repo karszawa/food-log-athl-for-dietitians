@@ -5,11 +5,13 @@ import {
   DELETE_ATHLETE_MESSAGE,
   DeleteAthleteMessagePayload,
 } from "./actions";
-import { Message } from "../../lib/firestore";
+import { Message } from "../../lib/firestore.d";
 
 export interface State {
   messages: {
-    [id: string]: Message;
+    [athleteId: string]: {
+      [messageId: string]: Message;
+    };
   };
 }
 
@@ -22,14 +24,22 @@ export default createReducer(initialState, {
     state: State,
     action: PayloadAction<AddAthleteMessagePayload>
   ) => {
-    const { id, message } = action.payload;
+    const { id, message, athleteId } = action.payload;
 
-    state.messages[id] = message;
+    if (!state.messages[athleteId]) {
+      state.messages[athleteId] = {};
+    }
+
+    state.messages[athleteId][id] = message;
   },
   [DELETE_ATHLETE_MESSAGE]: (
     state: State,
     action: PayloadAction<DeleteAthleteMessagePayload>
   ) => {
-    delete state.messages[action.payload.id];
+    const { id, athleteId } = action.payload;
+
+    if (state.messages[athleteId]) {
+      delete state.messages[athleteId][id];
+    }
   },
 });

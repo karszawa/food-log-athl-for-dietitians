@@ -9,6 +9,7 @@
     "lint": "eslint src/**/*.{ts,tsx} --fix"
   },
   "dependencies": {
+    "dayjs": "^1.8.15",
     "expo": "^33.0.0",
     "expo-constants": "^5.0.1",
     "expo-secure-store": "^5.0.1",
