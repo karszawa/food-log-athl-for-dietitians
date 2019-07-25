@@ -38,7 +38,7 @@ const AthleteListScreen: NavigationScreenComponent = props => {
   const { users: athletes } = useDietitian(sid);
 
   const listItems = athletes.map(athlete => (
-    <StyledListItem>
+    <StyledListItem key={athlete.id}>
       <TouchableOpacity
         onPress={navigateToAthleteDetail(props.navigation, athlete.id)}>
         <AffiliationName>
