@@ -2,5 +2,5 @@ export interface Message {
   type?: string;
   text: string;
   from: string;
-  ts: firebase.firestore.Timestamp;
+  ts: string; // 'Sat Jul 27 2019 01:21:26 GMT+0900 (GMT+09:00)'
 }

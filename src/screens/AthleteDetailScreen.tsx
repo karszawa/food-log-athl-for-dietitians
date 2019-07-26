@@ -3,9 +3,11 @@ import { NavigationScreenComponent } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Content, Text, ListItem, List } from "native-base";
 import styled from "styled-components";
+import dayjs from "dayjs";
 import { useAuthentication } from "../hooks/useAuthentication";
 import { subscribeAthleteMessage } from "../store/athlete/actions";
 import { RootState } from "../store";
+import { formatRelativeDateTime } from "../lib/datetime";
 
 interface Params {
   athleteId: string;
@@ -37,7 +39,7 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
     <StyledListItem>
       <Text>FROM: {message.from}</Text>
       <Text>TEXT: {message.text}</Text>
-      <Text>AT: {message.ts.toDate().toUTCString()}</Text>
+      <Text>AT: {formatRelativeDateTime(dayjs(message.ts))}</Text>
     </StyledListItem>
   ));
 

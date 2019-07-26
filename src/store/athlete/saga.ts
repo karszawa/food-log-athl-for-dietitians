@@ -9,6 +9,7 @@ import {
   deleteAthleteMessage,
 } from "./actions";
 import { db } from "../../lib/firestore";
+import { Message } from "../../lib/firestore.d";
 
 function* handleSubscribeAthleteMessage(
   action: PayloadAction<SubscribeAthleteMessagePayload>
@@ -33,6 +34,7 @@ function* handleSubscribeAthleteMessage(
 
   while (true) {
     const { data: change } = yield take(channel);
+    const data = change.doc.data();
 
     if (!change) {
       break;
@@ -45,7 +47,10 @@ function* handleSubscribeAthleteMessage(
           addAthleteMessage({
             id: change.doc.id,
             athleteId,
-            message: change.doc.data(),
+            message: {
+              ...data,
+              ts: data.ts.toDate().toString(),
+            },
           })
         );
         break;
