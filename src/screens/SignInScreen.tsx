@@ -70,9 +70,11 @@ interface RouterProps {
 const useRouter = ({ navigation }: RouterProps) => {
   const { authenticated } = useSelector((state: RootState) => state.auth);
 
-  if (authenticated) {
-    navigation.navigate(AthleteListScreenName);
-  }
+  useEffect(() => {
+    if (authenticated) {
+      navigation.navigate(AthleteListScreenName);
+    }
+  }, [authenticated]);
 };
 
 const UserNameInput = (props: any) => (
