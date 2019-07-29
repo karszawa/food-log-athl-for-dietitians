@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import FooLogAPIClient from "../../lib/foolog-api-client";
+import { FooLogAPIClient } from "../../lib/foolog-api-client";
 import { FETCH_DIETITIAN, fetchDietitianSuccess } from "./actions";
 
 function* handleFetchDietitian() {

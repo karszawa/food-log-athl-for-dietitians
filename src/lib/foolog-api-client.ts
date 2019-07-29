@@ -1,10 +1,23 @@
 import Constants from "expo-constants";
 import { sha256 } from "js-sha256";
+import { number } from "prop-types";
 import { NotAuthenticatedError, BadRequest, InvalidRequest } from "./error";
-import { Auth, PostSessionResponseData } from "./foolog-api-client.d";
+import {
+  Auth,
+  PostSessionResponseData,
+  GetRecordsFoodsResponse,
+} from "./foolog-api-client.d";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
 const [GET, POST, PUT, DELETE] = ["GET", "POST", "PUT", "DELETE"];
+
+function qs(props: { [key: string]: any }) {
+  return Object.entries(props)
+    .map(
+      ([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`
+    )
+    .join("&");
+}
 
 function logging(method: string, path: string): Function {
   return function(
@@ -29,7 +42,7 @@ type Headers = {
   [name: string]: string;
 };
 
-export default class FooLogAPIClient {
+export class FooLogAPIClient {
   static platform = "iOS";
   static deviceId = sha256.hmac(SECRET_KEY, Constants.deviceId);
   static auth?: Auth;
@@ -79,7 +92,7 @@ export default class FooLogAPIClient {
     password: string;
   }) {
     const response = await fetch(`${BASE_URL}/dietitians/session`, {
-      method: "POST",
+      method: POST,
       headers: {
         "Content-Type": "application/json",
       },
@@ -124,7 +137,7 @@ export default class FooLogAPIClient {
   @logging(DELETE, "/session")
   static async deleteSession() {
     const response = await this.fetch(`${BASE_URL}/session`, {
-      method: "DELETE",
+      method: DELETE,
     });
     const data = await response.json();
 
@@ -139,6 +152,52 @@ export default class FooLogAPIClient {
 
   // API0103
   // async postSessionRefresh() {}
+
+  // API1012
+  @logging(GET, "/records/foods")
+  static async getRecordsFoods(props: {
+    athleteId: string;
+    offset?: number;
+    limit?: number;
+    from: string;
+    to: string;
+    include_deleted?: boolean;
+    detail?: boolean;
+    expiry_sec?: number;
+    size?: string;
+  }): Promise<GetRecordsFoodsResponse> {
+    const params = {
+      offset: 0,
+      limit: 200,
+      include_deleted: false,
+      detail: false,
+      size: "M",
+      ...props,
+    };
+
+    console.log(params);
+
+    const response = await this.fetch(
+      `${BASE_URL}/records/foods?${qs(params)}`,
+      {
+        method: GET,
+        headers: {
+          "X-User-Id": props.athleteId,
+        },
+      }
+    );
+
+    const data: GetRecordsFoodsResponse = await response.json();
+
+    switch (response.status) {
+      case 200:
+        return data;
+      case 400:
+        throw new InvalidRequest(data.error.error_code);
+      default:
+        throw new InvalidRequest();
+    }
+  }
 
   // API7202
   @logging(GET, "/dietitians")

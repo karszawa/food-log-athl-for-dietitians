@@ -1,14 +1,12 @@
 import React from "react";
 import { Provider } from "react-redux";
-import Navigation from "./navigation";
+import Navigator from "./navigation";
 import { createStore } from "./store";
 
 const store = createStore();
 
-const App: React.FC<{}> = () => (
+export default () => (
   <Provider store={store}>
-    <Navigation />
+    <Navigator />
   </Provider>
 );
-
-export default App;

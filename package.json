@@ -25,6 +25,7 @@
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",
     "react-navigation-hooks": "^1.0.0-alpha.2",
+    "react-navigation-redux-helpers": "^3.0.2",
     "react-navigation-transitions": "^1.0.11",
     "react-redux": "^7.1.0",
     "redux-logger": "^3.0.6",
