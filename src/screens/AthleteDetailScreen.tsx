@@ -14,6 +14,7 @@ import { formatRelativeDateTime } from "../lib/datetime";
 import { Message, isMessage } from "../lib/firestore.d";
 import { Record, isRecord } from "../lib/foolog-api-client.d";
 import { RecordEntry } from "../components/RecordEntry";
+import { MessageEntry } from "../components/MessageEntry";
 
 interface Params {
   athleteId: string;
@@ -30,9 +31,9 @@ const useAthleteMessages = (sid: string, athleteId: string) => {
     };
   }, [sid, athleteId]);
 
-  return (
-    useSelector((state: RootState) => state.athlete.messages[athleteId]) || {}
-  );
+  return Object.values(
+    useSelector((state: RootState) => state.athlete.messages[athleteId] || [])
+  ).filter(m => !m.type);
 };
 
 const useAthleteRecords = (
@@ -53,8 +54,8 @@ const useAthleteRecords = (
     );
   }, [sid, from, to]);
 
-  return (
-    useSelector((state: RootState) => state.athlete.records[athleteId]) || {}
+  return Object.values(
+    useSelector((state: RootState) => state.athlete.records[athleteId] || [])
   );
 };
 
@@ -78,8 +79,8 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const messages = useAthleteMessages(sid, athleteId);
   const records = useAthleteRecords(sid, athleteId, from, to);
   const entries = ([] as (Message | Record)[])
-    .concat(Object.values(messages))
-    .concat(Object.values(records))
+    .concat(messages)
+    .concat(records)
     .sort((a, b) => {
       const at = getDateTime(a) || dayjs();
       const bt = getDateTime(b) || dayjs();
@@ -89,23 +90,11 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const entryList = entries.map(entry => {
     const e = isRecord(entry) ? (
       <RecordEntry record={entry} />
-    ) : isMessage(entry) ? null : null;
+    ) : isMessage(entry) ? (
+      <MessageEntry message={entry} />
+    ) : null;
     return <ListItem key={entry.id}>{e}</ListItem>;
   });
-
-  // const messageList = Object.values(messages).map(message => (
-  //   <StyledListItem key={message.id}>
-  //     <Text>FROM: {message.from}</Text>
-  //     <Text>TEXT: {message.text}</Text>
-  //     <Text>AT: {formatRelativeDateTime(dayjs(message.ts))}</Text>
-  //   </StyledListItem>
-  // ));
-
-  // const recordsList = Object.values(records).map(record => (
-  //   <ListItem key={record.id}>
-  //     <Text>{record.id}</Text>
-  //   </ListItem>
-  // ));
 
   return (
     <StyledContainer>
@@ -118,9 +107,4 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
 
 const StyledContainer = styled(Container)`
   background-color: #e5e5e5;
-`;
-
-const StyledListItem = styled(ListItem)`
-  flex-direction: column;
-  justify-content: flex-start;
 `;
