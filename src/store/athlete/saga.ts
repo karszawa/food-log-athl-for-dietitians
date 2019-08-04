@@ -74,7 +74,7 @@ function* handleFetchAthleteRecords(
 
   const data: GetRecordsFoodsResponse = yield call(
     [FooLogAPIClient, FooLogAPIClient.getRecordsFoods],
-    { athleteId, from, to }
+    { athleteId, from, to, detail: true, expiry_sec: 900 }
   );
 
   yield put(addAthleteRecords({ athleteId, records: data.records }));

@@ -57,6 +57,10 @@ export default createReducer(initialState, {
   ) => {
     const { records, athleteId } = action.payload;
 
+    if (!state.records[athleteId]) {
+      state.records[athleteId] = {};
+    }
+
     records.forEach(record => {
       state.records[athleteId][record.id] = record;
     });

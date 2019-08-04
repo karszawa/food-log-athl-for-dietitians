@@ -67,6 +67,54 @@ export interface Record {
   meal_type?: "breakfast" | "lunch" | "supper" | "snack";
   photo_ids: Id24[];
   nutrients: Nutrient[];
+  memos?: Memo[];
+  photos?: Photo[];
+  food_items?: FoodItem[];
+}
+
+export const isRecord = (obj: any): obj is Record => {
+  return obj.updated_at && obj.id && obj.date;
+};
+
+export interface Memo {
+  id: Id24;
+  photo_id: Id24;
+  comment: string;
+}
+
+export interface Photo {
+  id: Id24;
+  transition_dst_id: Id24;
+  updated_at: Timestamptz;
+  file: {
+    url: string;
+    expiry: Timestamptz;
+  };
+}
+
+export interface FoodItem {
+  id: Id24;
+  food_id: Id24;
+  name: string;
+  maker_name: string;
+  maker_code: string;
+  category_name: string;
+  source_name: string;
+  souce_id: string;
+  user_customized: boolean;
+  qty: Numeric;
+  base_qty: Numeric;
+  unit_id: Id24;
+  unit: string;
+  in_grams: Numeric;
+  photo_id: Id24;
+  location: {
+    x: Numeric;
+    y: Numeric;
+    w: Numeric;
+    h: Numeric;
+  };
+  data: any;
 }
 
 export interface ResponseData {
