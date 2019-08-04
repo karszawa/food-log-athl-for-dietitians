@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { NavigationScreenComponent } from "react-navigation";
+import { NavigationScreenComponent, FlatList } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Content, Text, ListItem, List } from "native-base";
-import styled from "styled-components";
+import { Container, Content, ListItem } from "native-base";
+import styled from "styled-components/native";
 import dayjs, { Dayjs } from "dayjs";
 import { useAuthentication } from "../hooks/useAuthentication";
 import {
@@ -71,6 +71,31 @@ const getDateTime = (obj: Message | Record) => {
   return null;
 };
 
+interface DateSeparator {
+  separator: boolean;
+  date: Dayjs;
+  id: string;
+}
+
+const isSeparator = (obj: any): obj is DateSeparator => {
+  return Boolean(obj.separator);
+};
+
+const renderItem = ({ item }: { item: Message | Record | DateSeparator }) => {
+  if (isSeparator(item)) {
+    return <DateSeparator date={item.date} />;
+  }
+
+  const e = isRecord(item) ? (
+    <RecordEntry record={item} />
+  ) : isMessage(item) ? (
+    <MessageEntry message={item} />
+  ) : null;
+  // const datetime = formatRelativeDateTime(getDateTime(item));
+
+  return <StyledListItem>{e}</StyledListItem>;
+};
+
 export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
@@ -85,26 +110,78 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
       const at = getDateTime(a) || dayjs();
       const bt = getDateTime(b) || dayjs();
       return at.unix() - bt.unix();
-    });
+    })
+    .reduce(
+      (prev, curr) => {
+        if (prev.length === 0) {
+          return [curr];
+        } else {
+          const prevTs = getDateTime(prev[prev.length - 1]);
+          const currTs = getDateTime(curr);
 
-  const entryList = entries.map(entry => {
-    const e = isRecord(entry) ? (
-      <RecordEntry record={entry} />
-    ) : isMessage(entry) ? (
-      <MessageEntry message={entry} />
-    ) : null;
-    return <ListItem key={entry.id}>{e}</ListItem>;
-  });
+          if (prevTs.diff(currTs, "date") === 0) {
+            return prev.concat(curr);
+          } else {
+            const dateSeparator: DateSeparator = {
+              separator: true,
+              date: prevTs,
+              id: prevTs.toISOString(),
+            };
+
+            return [...prev, dateSeparator, curr];
+          }
+        }
+      },
+      [] as (Message | Record)[]
+    );
 
   return (
     <StyledContainer>
       <Content>
-        <List>{entryList}</List>
+        <FlatList
+          data={entries}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
       </Content>
     </StyledContainer>
   );
 };
 
 const StyledContainer = styled(Container)`
-  background-color: #e5e5e5;
+  background-color: #f5f5f5;
+`;
+
+const StyledListItem = styled(ListItem)`
+  border-bottom-width: 0;
+`;
+
+const DateSeparator = (props: { date: Dayjs }) => {
+  return (
+    <DateSeparatorContainer>
+      <DateSeparatorBar />
+      <DateSeparatorText>{props.date.format("YYYY/MM/DD")}</DateSeparatorText>
+      <DateSeparatorBar />
+    </DateSeparatorContainer>
+  );
+};
+
+const DateSeparatorContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin: 8px;
+`;
+
+const DateSeparatorBar = styled.View`
+  flex: 1;
+  height: 1px;
+  border-top-width: 1px;
+  border-top-color: #ddd;
+  margin: 0 2px;
+`;
+
+const DateSeparatorText = styled.Text`
+  font-size: 12px;
+  color: #999;
+  margin: 0 2px;
 `;
