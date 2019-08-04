@@ -96,44 +96,51 @@ const renderItem = ({ item }: { item: Message | Record | DateSeparator }) => {
   return <StyledListItem>{e}</StyledListItem>;
 };
 
+const useEntries = (sid: string, athleteId: string, from: Dayjs, to: Dayjs) => {
+  const messages = useAthleteMessages(sid, athleteId);
+  const records = useAthleteRecords(sid, athleteId, from, to);
+
+  // MEMO: 日毎の食事記録をソートされた配列としてまとめる
+  const groups = ([] as (Message | Record)[])
+    .concat(messages)
+    .concat(records)
+    .reduce((groups, entry) => {
+      const currTsFmt = getDateTime(entry).format("YYYY/MM/DD");
+
+      if (!groups[currTsFmt]) {
+        groups[currTsFmt] = [];
+      }
+
+      groups[currTsFmt] = groups[currTsFmt].concat(entry);
+
+      return groups;
+    }, {});
+
+  // MEMO: 日毎にまとめやセパレータを挿入しつつFlattenする
+  return Object.entries(groups)
+    .sort((a, b) => dayjs(a[0]).diff(dayjs(b[0])))
+    .reduce(
+      (entries, pair) => {
+        const date = dayjs(pair[0]);
+        const dateSeparator: DateSeparator = {
+          separator: true,
+          date,
+          id: date.toISOString(),
+        };
+        const dayEntries: (Record | Message)[] = pair[1] as any;
+
+        return [...entries, dateSeparator, ...dayEntries];
+      },
+      [] as (Message | Record)[]
+    );
+};
+
 export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
   const [from, setFrom] = useState(dayjs().subtract(300, "month"));
   const [to, setTo] = useState(dayjs());
-  const messages = useAthleteMessages(sid, athleteId);
-  const records = useAthleteRecords(sid, athleteId, from, to);
-  const entries = ([] as (Message | Record)[])
-    .concat(messages)
-    .concat(records)
-    .sort((a, b) => {
-      const at = getDateTime(a) || dayjs();
-      const bt = getDateTime(b) || dayjs();
-      return at.unix() - bt.unix();
-    })
-    .reduce(
-      (prev, curr) => {
-        if (prev.length === 0) {
-          return [curr];
-        } else {
-          const prevTs = getDateTime(prev[prev.length - 1]);
-          const currTs = getDateTime(curr);
-
-          if (prevTs.diff(currTs, "date") === 0) {
-            return prev.concat(curr);
-          } else {
-            const dateSeparator: DateSeparator = {
-              separator: true,
-              date: prevTs,
-              id: prevTs.toISOString(),
-            };
-
-            return [...prev, dateSeparator, curr];
-          }
-        }
-      },
-      [] as (Message | Record)[]
-    );
+  const entries = useEntries(sid, athleteId, from, to);
 
   return (
     <StyledContainer>
