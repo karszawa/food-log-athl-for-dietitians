@@ -1,5 +1,10 @@
 {
-  "extends": ["universe", "prettier"],
+  "extends": [
+    "universe",
+    "plugin:prettier/recommended",
+    "prettier/react",
+    "prettier/standard"
+  ],
   "globals": {
     "__DEV__": false
   },
