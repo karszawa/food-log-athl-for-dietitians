@@ -71,31 +71,6 @@ const getDateTime = (obj: Message | Record) => {
   return null;
 };
 
-interface DateSeparator {
-  separator: boolean;
-  date: Dayjs;
-  id: string;
-}
-
-const isSeparator = (obj: any): obj is DateSeparator => {
-  return Boolean(obj.separator);
-};
-
-const renderItem = ({ item }: { item: Message | Record | DateSeparator }) => {
-  if (isSeparator(item)) {
-    return <DateSeparator date={item.date} />;
-  }
-
-  const e = isRecord(item) ? (
-    <RecordEntry record={item} />
-  ) : isMessage(item) ? (
-    <MessageEntry message={item} />
-  ) : null;
-  // const datetime = formatRelativeDateTime(getDateTime(item));
-
-  return <StyledListItem>{e}</StyledListItem>;
-};
-
 const useEntries = (sid: string, athleteId: string, from: Dayjs, to: Dayjs) => {
   const messages = useAthleteMessages(sid, athleteId);
   const records = useAthleteRecords(sid, athleteId, from, to);
@@ -135,12 +110,36 @@ const useEntries = (sid: string, athleteId: string, from: Dayjs, to: Dayjs) => {
     );
 };
 
+interface DateSeparator {
+  separator: boolean;
+  date: Dayjs;
+  id: string;
+}
+
+const isSeparator = (obj: any): obj is DateSeparator => {
+  return Boolean(obj.separator);
+};
+
 export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
   const [from, setFrom] = useState(dayjs().subtract(300, "month"));
   const [to, setTo] = useState(dayjs());
   const entries = useEntries(sid, athleteId, from, to);
+
+  const renderItem = ({ item }: { item: Message | Record | DateSeparator }) => {
+    if (isSeparator(item)) {
+      return <DateSeparator date={item.date} />;
+    }
+
+    const e = isRecord(item) ? (
+      <RecordEntry record={item} />
+    ) : isMessage(item) ? (
+      <MessageEntry message={item} athleteId={athleteId} />
+    ) : null;
+
+    return <StyledListItem>{e}</StyledListItem>;
+  };
 
   return (
     <StyledContainer>
