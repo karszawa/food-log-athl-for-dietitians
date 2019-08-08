@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavigationScreenComponent, FlatList } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Content, ListItem } from "native-base";
+import { Container, Content, ListItem, Footer, Input } from "native-base";
 import styled from "styled-components/native";
 import dayjs, { Dayjs } from "dayjs";
 import { useAuthentication } from "../hooks/useAuthentication";
@@ -15,6 +15,7 @@ import { Message, isMessage } from "../lib/firestore.d";
 import { Record, isRecord } from "../lib/foolog-api-client.d";
 import { RecordEntry } from "../components/RecordEntry";
 import { MessageEntry } from "../components/MessageEntry";
+import { CommentBox } from "../components/CommentBox";
 
 interface Params {
   athleteId: string;
@@ -150,6 +151,13 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
           keyExtractor={item => item.id}
         />
       </Content>
+
+      <CommentBox
+        onSubmit={text => {
+          alert(text);
+          return true;
+        }}
+      />
     </StyledContainer>
   );
 };

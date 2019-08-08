@@ -32,3 +32,9 @@ src
 │   └── saga.ts: saga root
 └── styles: style files
 ```
+
+## TODO
+
+- [ ] コメント入力
+- [ ] 体組成値のグラフ
+- [ ] デザインを整える

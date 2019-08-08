@@ -74,7 +74,7 @@ const DateTimeText = styled.Text`
 const FoodItem = styled.View`
   margin-top: 6px;
   border-radius: 8px;
-  background-color: #eee;
+  background-color: #f5f5f5;
   padding: 2px 12px;
   flex: 0;
 `;
