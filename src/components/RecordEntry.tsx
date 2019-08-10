@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import dayjs from "dayjs";
+import { View } from "native-base";
 import { Record } from "../lib/foolog-api-client.d";
 
 interface Props {
@@ -73,14 +74,15 @@ const DateTimeText = styled.Text`
 
 const FoodItem = styled.View`
   margin-top: 6px;
-  border-radius: 8px;
-  background-color: #f5f5f5;
-  padding: 2px 12px;
-  flex: 0;
+  flex-direction: row;
 `;
 
 const FoodItemName = styled.Text`
+  flex: none;
+  padding: 2px 12px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
   color: #333;
   font-size: 16px;
-  flex: 0;
+  overflow: hidden;
 `;
