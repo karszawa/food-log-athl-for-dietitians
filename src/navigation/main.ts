@@ -3,6 +3,7 @@ import { createStackNavigator } from "react-navigation";
 import { AthleteListScreenName, AthleteDetailScreenName } from "./screen-names";
 import AthleteListScreen from "../screens/AthleteListScreen";
 import { AthleteDetailScreen } from "../screens/AthleteDetailScreen";
+import { navigationOptions } from "../styles/navigation";
 
 // const handleCustomTransition = ({ scenes }) => {
 //   const prevScene = scenes[scenes.length - 2];
@@ -20,13 +21,21 @@ import { AthleteDetailScreen } from "../screens/AthleteDetailScreen";
 //   return fromLeft();
 // };
 
-const navigator = createStackNavigator({
-  [AthleteListScreenName]: {
-    screen: AthleteListScreen,
+const navigator = createStackNavigator(
+  {
+    [AthleteListScreenName]: {
+      screen: AthleteListScreen,
+    },
+    [AthleteDetailScreenName]: {
+      screen: AthleteDetailScreen,
+    },
   },
-  [AthleteDetailScreenName]: {
-    screen: AthleteDetailScreen,
-  },
-});
+  {
+    initialRouteName: AthleteListScreenName,
+    defaultNavigationOptions: {
+      ...navigationOptions,
+    },
+  }
+);
 
 export default navigator;

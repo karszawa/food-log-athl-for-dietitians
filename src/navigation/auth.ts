@@ -1,6 +1,7 @@
 import { createStackNavigator } from "react-navigation";
 import SignInScreen from "../screens/SignInScreen";
 import { SignInScreenName } from "./screen-names";
+import { navigationOptions } from "../styles/navigation";
 
 const navigator = createStackNavigator(
   {
@@ -10,6 +11,9 @@ const navigator = createStackNavigator(
   },
   {
     initialRouteName: SignInScreenName,
+    defaultNavigationOptions: {
+      ...navigationOptions,
+    },
   }
 );
 
