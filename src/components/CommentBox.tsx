@@ -1,49 +1,14 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components/native";
-import { Input, Icon, Footer } from "native-base";
-import {
-  TouchableOpacity,
-  GestureResponderEvent,
-  KeyboardAvoidingView,
-  NativeModules,
-  StatusBarIOS,
-} from "react-native";
-import { Platform } from "@unimodules/core";
-import { GRAY_C, PRIMARY_PINK } from "../styles/color";
-
-const { StatusBarManager } = NativeModules;
+import { Input, Icon } from "native-base";
+import { TouchableOpacity, GestureResponderEvent } from "react-native";
+import { GRAY_C } from "../styles/color";
 
 interface Props {
   onSubmit: (text: string) => void;
 }
 
-const useStatusBarHeight = () => {
-  const [statusBarHeight, setStatusBarHeight] = useState(0);
-
-  useEffect(() => {
-    if (Platform.OS === "ios") {
-      StatusBarManager.getHeight(statusBarFrameData => {
-        setStatusBarHeight(statusBarFrameData.height);
-      });
-
-      const statusBarListener = StatusBarIOS.addListener(
-        "statusBarFrameWillChange",
-        statusBarData => {
-          setStatusBarHeight(statusBarData.frame.height);
-        }
-      );
-
-      return () => {
-        statusBarListener.remove();
-      };
-    }
-  });
-
-  return statusBarHeight;
-};
-
 export const CommentBox: React.FC<Props> = ({ onSubmit }) => {
-  const statusBarHeight = useStatusBarHeight();
   const [text, setText] = useState("");
   const handleSubmit = useCallback(() => {
     if (text) {
@@ -53,21 +18,14 @@ export const CommentBox: React.FC<Props> = ({ onSubmit }) => {
   }, [text]);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={44 + statusBarHeight}
-      style={{ width: "100%" }}>
-      <Footer>
-        <InputContainer>
-          <StyledInput
-            placeholder="メッセージを送る"
-            onChangeText={setText}
-            value={text}
-          />
-          <SendButton onPress={handleSubmit} disabled={text.length === 0} />
-        </InputContainer>
-      </Footer>
-    </KeyboardAvoidingView>
+    <InputContainer>
+      <StyledInput
+        placeholder="メッセージを送る"
+        onChangeText={setText}
+        value={text}
+      />
+      <SendButton onPress={handleSubmit} disabled={text.length === 0} />
+    </InputContainer>
   );
 };
 

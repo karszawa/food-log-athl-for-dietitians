@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { NavigationScreenComponent, FlatList } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Content, ListItem, Footer, Input } from "native-base";
+import { Container, Content, ListItem, Footer } from "native-base";
 import styled from "styled-components/native";
 import dayjs, { Dayjs } from "dayjs";
 import { useAuthentication } from "../hooks/useAuthentication";
@@ -11,12 +11,12 @@ import {
   publishMessage,
 } from "../store/athlete/actions";
 import { RootState } from "../store";
-import { formatRelativeDateTime } from "../lib/datetime";
 import { Message, isMessage } from "../lib/firestore.d";
 import { Record, isRecord } from "../lib/foolog-api-client.d";
 import { RecordEntry } from "../components/RecordEntry";
 import { MessageEntry } from "../components/MessageEntry";
 import { CommentBox } from "../components/CommentBox";
+import { KeyboardAvoidingContainer } from "../components/KeyboardAvoidingContainer";
 
 interface Params {
   athleteId: string;
@@ -157,15 +157,18 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
 
   return (
     <StyledContainer>
-      <Content>
-        <FlatList
-          data={entries}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        />
-      </Content>
-
-      <CommentBox onSubmit={publishMessage} />
+      <KeyboardAvoidingContainer>
+        <Content>
+          <FlatList
+            data={entries}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />
+        </Content>
+        <Footer>
+          <CommentBox onSubmit={publishMessage} />
+        </Footer>
+      </KeyboardAvoidingContainer>
     </StyledContainer>
   );
 };
