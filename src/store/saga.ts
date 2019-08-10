@@ -15,8 +15,12 @@ export function* rootSaga() {
     yield all([athleteSaga(), authSaga(), dietitianSaga()]);
   } catch (e) {
     if (extendsRequestError(e)) {
-      alert(`ネットワークエラーが発生しました。エラコード: ${e.code}`);
+      alert(`ネットワークエラーが発生しました。エラーコード: ${e.code}`);
       // should send network request
+    }
+
+    if (process.env.NODE_ENV !== "production") {
+      throw e;
     }
   }
 }

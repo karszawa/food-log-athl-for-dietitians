@@ -1,11 +1,11 @@
 import Constants from "expo-constants";
 import { sha256 } from "js-sha256";
-import { number } from "prop-types";
 import { NotAuthenticatedError, BadRequest, InvalidRequest } from "./error";
 import {
   Auth,
-  PostSessionResponseData,
+  PostSessionResponse,
   GetRecordsFoodsResponse,
+  GetDietitiansResponse,
 } from "./foolog-api-client.d";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
@@ -107,7 +107,7 @@ export class FooLogAPIClient {
       }),
     });
 
-    const data: PostSessionResponseData = await response.json();
+    const data: PostSessionResponse = await response.json();
 
     switch (response.status) {
       case 201:
@@ -201,7 +201,7 @@ export class FooLogAPIClient {
 
   // API7202
   @logging(GET, "/dietitians")
-  static async getDietitians() {
+  static async getDietitians(): Promise<GetDietitiansResponse> {
     const response = await this.fetch(`${BASE_URL}/dietitians`, {
       method: "GET",
       headers: {

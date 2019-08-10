@@ -57,3 +57,14 @@ export interface AddAthleteRecordsPayload {
 export const addAthleteRecords = createAction<AddAthleteRecordsPayload>(
   ADD_ATHLETE_RECORDS
 );
+
+export const PUBLISH_MESSAGE = "PUBLISH_MESSAGE";
+
+export interface PublishMessagePayload {
+  athleteId: string;
+  text: string;
+}
+
+export const publishMessage = createAction<PublishMessagePayload>(
+  PUBLISH_MESSAGE
+);

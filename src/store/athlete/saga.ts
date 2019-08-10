@@ -1,7 +1,8 @@
-import { take, put, call, takeEvery } from "redux-saga/effects";
+import { take, put, call, takeEvery, select } from "redux-saga/effects";
 import { PayloadAction } from "redux-starter-kit";
 import { eventChannel } from "redux-saga";
 import dayjs from "dayjs";
+import { firestore } from "firebase";
 import {
   SUBSCRIBE_ATHLETE_MESSAGE,
   SubscribeAthleteMessagePayload,
@@ -10,11 +11,14 @@ import {
   FetchAthleteRecordsPayload,
   addAthleteRecords,
   FETCH_ATHLETE_RECORDS,
+  PublishMessagePayload,
+  PUBLISH_MESSAGE,
 } from "./actions";
 import { db } from "../../lib/firestore";
 import { Message } from "../../lib/firestore.d";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
 import { GetRecordsFoodsResponse } from "../../lib/foolog-api-client.d";
+import { RootState } from "..";
 
 function* handleSubscribeAthleteMessage(
   action: PayloadAction<SubscribeAthleteMessagePayload>
@@ -80,7 +84,19 @@ function* handleFetchAthleteRecords(
   yield put(addAthleteRecords({ athleteId, records: data.records }));
 }
 
+function* handlePublishMessage(action: PayloadAction<PublishMessagePayload>) {
+  const { athleteId, text } = action.payload;
+  const dietitianId = yield select((state: RootState) => state.dietitian.id);
+
+  db.collection(`users/${athleteId}/messages`).add({
+    from: dietitianId,
+    text,
+    ts: firestore.Timestamp.now(),
+  });
+}
+
 export function* rootSaga() {
   yield takeEvery(SUBSCRIBE_ATHLETE_MESSAGE, handleSubscribeAthleteMessage);
   yield takeEvery(FETCH_ATHLETE_RECORDS, handleFetchAthleteRecords);
+  yield takeEvery(PUBLISH_MESSAGE, handlePublishMessage);
 }

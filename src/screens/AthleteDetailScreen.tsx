@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { NavigationScreenComponent, FlatList } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Content, ListItem, Footer, Input } from "native-base";
@@ -8,6 +8,7 @@ import { useAuthentication } from "../hooks/useAuthentication";
 import {
   subscribeAthleteMessage,
   fetchAthleteRecords,
+  publishMessage,
 } from "../store/athlete/actions";
 import { RootState } from "../store";
 import { formatRelativeDateTime } from "../lib/datetime";
@@ -111,6 +112,17 @@ const useEntries = (sid: string, athleteId: string, from: Dayjs, to: Dayjs) => {
     );
 };
 
+const usePublishMessage = (sid: string, athleteId: string) => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    text => {
+      dispatch(publishMessage({ athleteId, text }));
+    },
+    [sid]
+  );
+};
+
 interface DateSeparator {
   separator: boolean;
   date: Dayjs;
@@ -124,6 +136,7 @@ const isSeparator = (obj: any): obj is DateSeparator => {
 export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
+  const publishMessage = usePublishMessage(sid, athleteId);
   const [from, setFrom] = useState(dayjs().subtract(300, "month"));
   const [to, setTo] = useState(dayjs());
   const entries = useEntries(sid, athleteId, from, to);
@@ -152,12 +165,7 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
         />
       </Content>
 
-      <CommentBox
-        onSubmit={text => {
-          alert(text);
-          return true;
-        }}
-      />
+      <CommentBox onSubmit={publishMessage} />
     </StyledContainer>
   );
 };

@@ -4,10 +4,15 @@ import {
   FETCH_DIETITIAN_SUCCESS,
   FetchDietitianSuccessPayload,
 } from "./actions";
-import { User } from "../../lib/foolog-api-client.d";
+import { User, Id24, File } from "../../lib/foolog-api-client.d";
 
 export interface State {
+  id?: Id24;
+  login_id?: string;
+  nickname?: string;
+  data?: any;
   users: User[];
+  file?: File;
   processing: boolean;
 }
 
@@ -24,7 +29,12 @@ export default createReducer(initialState, {
     state: State,
     action: PayloadAction<FetchDietitianSuccessPayload>
   ) => {
+    state.id = action.payload.id;
+    state.login_id = action.payload.login_id;
+    state.nickname = action.payload.nickname;
+    state.data = action.payload.data;
     state.users = action.payload.users;
+    state.file = action.payload.file;
     state.processing = false;
   },
 });

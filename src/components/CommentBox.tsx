@@ -14,7 +14,7 @@ import { GRAY_C, PRIMARY_PINK } from "../styles/color";
 const { StatusBarManager } = NativeModules;
 
 interface Props {
-  onSubmit: (text: string) => boolean;
+  onSubmit: (text: string) => void;
 }
 
 const useStatusBarHeight = () => {
@@ -47,9 +47,8 @@ export const CommentBox: React.FC<Props> = ({ onSubmit }) => {
   const [text, setText] = useState("");
   const handleSubmit = useCallback(() => {
     if (text) {
-      if (onSubmit(text)) {
-        setText("");
-      }
+      onSubmit(text);
+      setText("");
     }
   }, [text]);
 
@@ -60,7 +59,11 @@ export const CommentBox: React.FC<Props> = ({ onSubmit }) => {
       style={{ width: "100%" }}>
       <Footer>
         <InputContainer>
-          <StyledInput placeholder="メッセージを送る" onChangeText={setText} />
+          <StyledInput
+            placeholder="メッセージを送る"
+            onChangeText={setText}
+            value={text}
+          />
           <SendButton onPress={handleSubmit} disabled={text.length === 0} />
         </InputContainer>
       </Footer>

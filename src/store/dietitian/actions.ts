@@ -1,5 +1,5 @@
 import { createAction } from "redux-starter-kit";
-import { GetDietitiansData } from "../../lib/foolog-api-client.d";
+import { GetDietitiansResponse } from "../../lib/foolog-api-client.d";
 
 export const FETCH_DIETITIAN = "FETCH_DIETITIAN";
 
@@ -11,7 +11,7 @@ export const fetchDietitian = createAction<FetchDietitianPayload>(
 
 export const FETCH_DIETITIAN_SUCCESS = "FETCH_DIETITIAN_SUCCESS";
 
-export type FetchDietitianSuccessPayload = GetDietitiansData;
+export type FetchDietitianSuccessPayload = GetDietitiansResponse;
 
 export const fetchDietitianSuccess = createAction<FetchDietitianSuccessPayload>(
   FETCH_DIETITIAN_SUCCESS

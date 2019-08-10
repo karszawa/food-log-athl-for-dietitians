@@ -123,7 +123,7 @@ export interface ResponseData {
   };
 }
 
-export interface PostSessionResponseData extends ResponseData {
+export interface PostSessionResponse extends ResponseData {
   token: string;
   token_secret: string;
   expiry_time: Datetimepz;
@@ -132,8 +132,8 @@ export interface PostSessionResponseData extends ResponseData {
   refresh_token_expiry_time: Datetimepz;
 }
 
-export interface GetDietitiansData extends ResponseData {
-  id: string;
+export interface GetDietitiansResponse extends ResponseData {
+  id: Id24;
   login_id: string;
   nickname: string;
   locales: string;
