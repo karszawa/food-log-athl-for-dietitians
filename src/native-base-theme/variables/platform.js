@@ -9,7 +9,11 @@ const deviceWidth = Dimensions.get("window").width;
 const platform = Platform.OS;
 const platformStyle = undefined;
 const isIphoneX =
-platform === "ios" && (deviceHeight === 812 || deviceWidth === 812 || deviceHeight === 896 || deviceWidth === 896);
+  platform === "ios" &&
+  (deviceHeight === 812 ||
+    deviceWidth === 812 ||
+    deviceHeight === 896 ||
+    deviceWidth === 896);
 
 export default {
   platformStyle,
@@ -136,7 +140,7 @@ export default {
 
   // Footer
   footerHeight: 55,
-  footerDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
+  footerDefaultBg: "#F8F8F8",
   footerPaddingBottom: 0,
 
   // FooterTab
@@ -271,13 +275,13 @@ export default {
       topInset: 24,
       leftInset: 0,
       rightInset: 0,
-      bottomInset: 34
+      bottomInset: 34,
     },
     landscape: {
       topInset: 0,
       leftInset: 44,
       rightInset: 44,
-      bottomInset: 21
-    }
-  }
+      bottomInset: 21,
+    },
+  },
 };

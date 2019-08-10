@@ -2,8 +2,11 @@ import React, { useState, useCallback } from "react";
 import { Provider } from "react-redux";
 import { AppLoading } from "expo";
 import { loadAsync } from "expo-font";
+import { StyleProvider } from "native-base";
 import Navigator from "./navigation";
 import { createStore } from "./store";
+import getTheme from "./native-base-theme/components";
+import platform from "./native-base-theme/variables/material.js";
 
 const store = createStore();
 
@@ -16,7 +19,9 @@ export default () => {
 
   return (
     <Provider store={store}>
-      <Navigator />
+      <StyleProvider style={getTheme(platform)}>
+        <Navigator />
+      </StyleProvider>
     </Provider>
   );
 };

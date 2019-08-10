@@ -17,6 +17,7 @@ import { RecordEntry } from "../components/RecordEntry";
 import { MessageEntry } from "../components/MessageEntry";
 import { CommentBox } from "../components/CommentBox";
 import { KeyboardAvoidingContainer } from "../components/KeyboardAvoidingContainer";
+import ThemeVariables from "../native-base-theme/variables/platform.js";
 
 interface Params {
   athleteId: string;
@@ -158,7 +159,7 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   return (
     <StyledContainer>
       <KeyboardAvoidingContainer
-        keyboardVerticalOffset={55 /* footer height */}>
+        keyboardVerticalOffset={ThemeVariables.footerHeight}>
         <Content>
           <FlatList
             data={entries}
@@ -166,9 +167,9 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
             keyExtractor={item => item.id}
           />
         </Content>
-        <Footer>
+        <StyledFooter>
           <CommentBox onSubmit={publishMessage} />
-        </Footer>
+        </StyledFooter>
       </KeyboardAvoidingContainer>
     </StyledContainer>
   );
@@ -180,6 +181,10 @@ const StyledContainer = styled(Container)`
 
 const StyledListItem = styled(ListItem)`
   border-bottom-width: 0;
+`;
+
+const StyledFooter = styled(Footer)`
+  background-color: #f8f8f8;
 `;
 
 const DateSeparator = (props: { date: Dayjs }) => {
