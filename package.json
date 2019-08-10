@@ -6,7 +6,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint src/**/*.{ts,tsx} --fix"
+    "lint": "eslint src/**/*.{ts,tsx} --fix",
+    "deploy": "expo publish --config app.prod.json",
+    "optimize": "expo optimize"
   },
   "dependencies": {
     "dayjs": "^1.8.15",

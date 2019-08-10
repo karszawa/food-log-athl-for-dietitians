@@ -36,6 +36,6 @@ src
 ## TODO
 
 - [ ] 体組成値のグラフ
-- [ ] デザインを整える
 - [ ] 未読バッチ
 - [ ] 既読処理
+- [ ] CI/CD https://github.com/expo/expo-github-action
