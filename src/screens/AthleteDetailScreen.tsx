@@ -157,7 +157,8 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
 
   return (
     <StyledContainer>
-      <KeyboardAvoidingContainer>
+      <KeyboardAvoidingContainer
+        keyboardVerticalOffset={55 /* footer height */}>
         <Content>
           <FlatList
             data={entries}

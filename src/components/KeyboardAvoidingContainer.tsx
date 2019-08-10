@@ -1,15 +1,22 @@
 import React from "react";
 import { KeyboardAvoidingView } from "react-native";
-import { useStatusBarHeight } from "../hooks/device";
+import Constants from "expo-constants";
 
-export const KeyboardAvoidingContainer: React.FC<{}> = ({ children }) => {
-  const statusBarHeight = useStatusBarHeight();
+interface Props {
+  keyboardVerticalOffset: number;
+}
+
+export const KeyboardAvoidingContainer: React.FC<Props> = ({
+  children,
+  keyboardVerticalOffset,
+}) => {
+  const platformHeight = Constants.platform.ios ? 0 : 25;
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior="padding"
-      keyboardVerticalOffset={44 + statusBarHeight}>
+      keyboardVerticalOffset={keyboardVerticalOffset + platformHeight}>
       {children}
     </KeyboardAvoidingView>
   );

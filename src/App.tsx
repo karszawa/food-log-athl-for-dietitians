@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Provider } from "react-redux";
-import { AppLoading, Font } from "expo";
+import { AppLoading } from "expo";
+import { loadAsync } from "expo-font";
 import Navigator from "./navigation";
 import { createStore } from "./store";
 
@@ -22,10 +23,11 @@ export default () => {
 
 const useSetup = () => {
   const [isReady, setIsReady] = useState(false);
-  const setup = Font.loadAsync({
-    Roboto: require("./node_modules/native-base/Fonts/Roboto.ttf"),
-    Roboto_medium: require("./node_modules/native-base/Fonts/Roboto_medium.ttf"),
-  });
+  const setup = async () =>
+    await loadAsync({
+      Roboto: require("../node_modules/native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("../node_modules/native-base/Fonts/Roboto_medium.ttf"),
+    });
   const finish = useCallback(() => {
     setIsReady(true);
   }, [setIsReady]);
