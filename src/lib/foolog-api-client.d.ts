@@ -86,7 +86,7 @@ export interface Photo {
   id: Id24;
   transition_dst_id: Id24;
   updated_at: Timestamptz;
-  file: {
+  file?: {
     url: string;
     expiry: Timestamptz;
   };
@@ -147,4 +147,31 @@ export interface GetRecordsFoodsResponse extends ResponseData {
   updated_at: Datetimepz;
   count: number;
   records: Record[];
+}
+
+export interface GetRecordsDailyResponse extends ResponseData {
+  result: "OK";
+  updated_at: Timestamptz;
+  count: number;
+  records: {
+    type:
+      | "food"
+      | "day"
+      | "aux"
+      | "body"
+      | "exercise"
+      | "step"
+      | "blood_pressure"
+      | "blood_glucose"
+      | "sleep"
+      | "evacuation";
+    domain: string;
+    records: Record[];
+  }[];
+}
+
+export interface GetRecordsPhotosIdSignResponse extends ResponseData {
+  result: "OK";
+  url: string;
+  expiry: Timestamptz;
 }

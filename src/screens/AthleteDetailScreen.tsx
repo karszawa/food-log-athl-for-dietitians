@@ -1,15 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { NavigationScreenComponent, FlatList } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Content, ListItem, Footer } from "native-base";
 import styled from "styled-components/native";
 import dayjs, { Dayjs } from "dayjs";
 import { useAuthentication } from "../hooks/useAuthentication";
-import {
-  subscribeAthleteMessage,
-  fetchAthleteRecords,
-  publishMessage,
-} from "../store/athlete/actions";
+import { publishMessage, fetchLatestRecords } from "../store/athlete/actions";
 import { RootState } from "../store";
 import { Message, isMessage } from "../lib/firestore.d";
 import { Record, isRecord } from "../lib/foolog-api-client.d";
@@ -23,44 +19,42 @@ interface Params {
   athleteId: string;
 }
 
-const useAthleteMessages = (sid: string, athleteId: string) => {
-  const dispatch = useDispatch();
+// const useAthleteMessages = (sid: string, athleteId: string) => {
+//   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(subscribeAthleteMessage({ athleteId }));
+//   useEffect(() => {
+//     dispatch(subscribeAthleteMessage({ athleteId }));
 
-    return () => {
-      // TODO: Unsubscribe athlete messages
-    };
-  }, [sid, athleteId]);
+//     return () => {
+//       // TODO: Unsubscribe athlete messages
+//     };
+//   }, [sid, athleteId]);
 
-  return Object.values(
-    useSelector((state: RootState) => state.athlete.messages[athleteId] || [])
-  ).filter(m => !m.type);
-};
+//   return Object.values(
+//     useSelector((state: RootState) => state.athlete.messages[athleteId] || [])
+//   ).filter(m => !m.type);
+// };
 
-const useAthleteRecords = (
-  sid: string,
-  athleteId: string,
-  from: Dayjs,
-  to: Dayjs
-) => {
-  const dispatch = useDispatch();
+// const useAthleteRecords = (
+//   sid: string,
+//   athleteId: string,
+// ) => {
+//   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(
-      fetchAthleteRecords({
-        athleteId,
-        from: from.format("YYYY-MM-DD"),
-        to: to.format("YYYY-MM-DD"),
-      })
-    );
-  }, [sid, from, to]);
+//   useEffect(() => {
+//     dispatch(
+//       fetchAthleteRecords({
+//         athleteId,
+//         from: from.format("YYYY-MM-DD"),
+//         to: to.format("YYYY-MM-DD"),
+//       })
+//     );
+//   }, [sid, from, to]);
 
-  return Object.values(
-    useSelector((state: RootState) => state.athlete.records[athleteId] || [])
-  );
-};
+//   return Object.values(
+//     useSelector((state: RootState) => state.athlete.records[athleteId] || [])
+//   );
+// };
 
 const getDateTime = (obj: Message | Record) => {
   if (isMessage(obj)) {
@@ -74,9 +68,22 @@ const getDateTime = (obj: Message | Record) => {
   return null;
 };
 
-const useEntries = (sid: string, athleteId: string, from: Dayjs, to: Dayjs) => {
-  const messages = useAthleteMessages(sid, athleteId);
-  const records = useAthleteRecords(sid, athleteId, from, to);
+const useEntries = (sid: string, athleteId: string) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchLatestRecords({ athleteId, count: 14 /* 2w */ }));
+  }, [sid, dispatch, athleteId]);
+
+  const fetchMore = useCallback(() => {
+    dispatch(fetchLatestRecords({ athleteId, count: 14 /* 2w */ }));
+  }, [dispatch, athleteId]);
+  const records = Object.values(
+    useSelector((state: RootState) => state.athlete.records[athleteId] || [])
+  );
+  const messages = Object.values(
+    useSelector((state: RootState) => state.athlete.messages[athleteId] || [])
+  ).filter(m => !m.type);
 
   // MEMO: 日毎の食事記録をソートされた配列としてまとめる
   const groups = ([] as (Message | Record)[])
@@ -95,7 +102,7 @@ const useEntries = (sid: string, athleteId: string, from: Dayjs, to: Dayjs) => {
     }, {});
 
   // MEMO: 日毎にまとめやセパレータを挿入しつつFlattenする
-  return Object.entries(groups)
+  const entries = Object.entries(groups)
     .sort((a, b) => dayjs(a[0]).diff(dayjs(b[0])))
     .reduce(
       (entries, pair) => {
@@ -111,6 +118,11 @@ const useEntries = (sid: string, athleteId: string, from: Dayjs, to: Dayjs) => {
       },
       [] as (Message | Record)[]
     );
+
+  return {
+    fetchMore,
+    entries,
+  };
 };
 
 const usePublishMessage = (sid: string, athleteId: string) => {
@@ -138,9 +150,7 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
   const publishMessage = usePublishMessage(sid, athleteId);
-  const [from, setFrom] = useState(dayjs().subtract(300, "month"));
-  const [to, setTo] = useState(dayjs());
-  const entries = useEntries(sid, athleteId, from, to);
+  const { entries, fetchMore } = useEntries(sid, athleteId);
 
   const renderItem = ({ item }: { item: Message | Record | DateSeparator }) => {
     if (isSeparator(item)) {
@@ -148,7 +158,7 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
     }
 
     const e = isRecord(item) ? (
-      <RecordEntry record={item} />
+      <RecordEntry athleteId={athleteId} record={item} />
     ) : isMessage(item) ? (
       <MessageEntry message={item} athleteId={athleteId} />
     ) : null;

@@ -1,11 +1,14 @@
 import Constants from "expo-constants";
 import { sha256 } from "js-sha256";
+import { Dayjs } from "dayjs";
 import { NotAuthenticatedError, BadRequest, InvalidRequest } from "./error";
 import {
   Auth,
   PostSessionResponse,
   GetRecordsFoodsResponse,
   GetDietitiansResponse,
+  GetRecordsDailyResponse,
+  GetRecordsPhotosIdSignResponse,
 } from "./foolog-api-client.d";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
@@ -153,6 +156,37 @@ export class FooLogAPIClient {
   // API0103
   // async postSessionRefresh() {}
 
+  // API1006
+  @logging(GET, "/records/photos/:id/sign")
+  static async getRecordsPhotosIdSign(props: {
+    athleteId: string;
+    id: string;
+    size: "S" | "M" | "L";
+  }): Promise<GetRecordsPhotosIdSignResponse> {
+    const { id, athleteId, size } = props;
+    const response = await this.fetch(
+      `${BASE_URL}/records/photos/${id}/${size}/sign`,
+      {
+        method: GET,
+        headers: {
+          "X-User-Id": athleteId,
+        },
+      }
+    );
+
+    const data: GetRecordsPhotosIdSignResponse = await response.json();
+
+    switch (response.status) {
+      case 200:
+        return data;
+      case 400:
+        throw new InvalidRequest(data.error.error_code);
+      default:
+        throw new BadRequest(data.error.error_code);
+    }
+  }
+  // GetRecordsPhotosIdSignResponse
+
   // API1012
   @logging(GET, "/records/foods")
   static async getRecordsFoods(props: {
@@ -175,8 +209,6 @@ export class FooLogAPIClient {
       ...props,
     };
 
-    console.log(params);
-
     const response = await this.fetch(
       `${BASE_URL}/records/foods?${qs(params)}`,
       {
@@ -195,7 +227,42 @@ export class FooLogAPIClient {
       case 400:
         throw new InvalidRequest(data.error.error_code);
       default:
-        throw new InvalidRequest();
+        throw new InvalidRequest(JSON.stringify(data));
+    }
+  }
+
+  // API5201
+  @logging(GET, "/records/daily")
+  static async getRecordsDaily(props: {
+    athleteId: string;
+    from: Dayjs;
+    to: Dayjs;
+    food: boolean;
+    latest: boolean;
+  }): Promise<GetRecordsDailyResponse> {
+    const params = {
+      ...props,
+      expiry_sec: 900,
+      from: props.from.format("YYYY-MM-DD"),
+      to: props.to.format("YYYY-MM-DD"),
+    };
+
+    const response = await this.fetch(
+      `${BASE_URL}/records/daily?${qs(params)}`,
+      {
+        method: GET,
+        headers: {
+          "X-User-Id": props.athleteId,
+        },
+      }
+    );
+    const data: GetRecordsDailyResponse = await response.json();
+
+    switch (response.status) {
+      case 200:
+        return data;
+      case 400:
+        throw new BadRequest(data.error.error_code);
     }
   }
 
@@ -203,7 +270,7 @@ export class FooLogAPIClient {
   @logging(GET, "/dietitians")
   static async getDietitians(): Promise<GetDietitiansResponse> {
     const response = await this.fetch(`${BASE_URL}/dietitians`, {
-      method: "GET",
+      method: GET,
       headers: {
         "Content-Type": "application/json",
       },

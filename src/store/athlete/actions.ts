@@ -1,4 +1,5 @@
 import { createAction } from "redux-starter-kit";
+import { Dayjs } from "dayjs";
 import { Message } from "../../lib/firestore.d";
 import { Record } from "../../lib/foolog-api-client.d";
 
@@ -35,17 +36,17 @@ export const deleteAthleteMessage = createAction<DeleteAthleteMessagePayload>(
   DELETE_ATHLETE_MESSAGE
 );
 
-export const FETCH_ATHLETE_RECORDS = "FETCH_ATHLETE_RECORDS";
+// export const FETCH_ATHLETE_RECORDS = "FETCH_ATHLETE_RECORDS";
 
-export interface FetchAthleteRecordsPayload {
-  athleteId: string;
-  from: string;
-  to: string;
-}
+// export interface FetchAthleteRecordsPayload {
+//   athleteId: string;
+//   from: string;
+//   to: string;
+// }
 
-export const fetchAthleteRecords = createAction<FetchAthleteRecordsPayload>(
-  FETCH_ATHLETE_RECORDS
-);
+// export const fetchAthleteRecords = createAction<FetchAthleteRecordsPayload>(
+//   FETCH_ATHLETE_RECORDS
+// );
 
 export const ADD_ATHLETE_RECORDS = "ADD_ATHLETE_RECORDS";
 
@@ -68,3 +69,24 @@ export interface PublishMessagePayload {
 export const publishMessage = createAction<PublishMessagePayload>(
   PUBLISH_MESSAGE
 );
+
+export const FETCH_LATEST_RECORDS = "FETCH_LATEST_RECORDS";
+
+export interface FetchLatestRecordsPayload {
+  athleteId: string;
+  count: number;
+}
+
+export const fetchLatestRecords = createAction<FetchLatestRecordsPayload>(
+  FETCH_LATEST_RECORDS
+);
+
+export const UPDATE_RANGE = "UPDATE_RANGE";
+
+export interface UpdateRangePayload {
+  athleteId: string;
+  from: string;
+  to: string;
+}
+
+export const updateRange = createAction<UpdateRangePayload>(UPDATE_RANGE);

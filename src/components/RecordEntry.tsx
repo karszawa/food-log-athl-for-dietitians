@@ -1,17 +1,19 @@
 import React from "react";
 import styled from "styled-components/native";
 import dayjs from "dayjs";
-import { View } from "native-base";
 import { Record } from "../lib/foolog-api-client.d";
+import { AuthImage } from "./AuthImage";
 
 interface Props {
+  athleteId: string;
   record: Record;
 }
 
 export const RecordEntry = (props: Props) => {
-  const { record } = props;
+  const { athleteId, record } = props;
   const photos = record.photos.map(photo => (
-    <Photo key={photo.id} source={{ uri: photo.file.url }} />
+    // <Photo key={photo.id} source={{ uri: get(photo, "file.url", "") }} />
+    <AuthPhoto key={photo.id} athleteId={athleteId} photo={photo} source={{}} />
   ));
   const datetime = dayjs(record.datetime).format("YYYY年M月D日 h:mm");
   const foodItems = record.food_items.map(foodItem => (
@@ -57,6 +59,13 @@ const DetailContainer = styled.View`
 const DateTimeContainer = styled.View``;
 
 const FoodItemsContainer = styled.View``;
+
+const AuthPhoto = styled(AuthImage)`
+  background-color: #eee;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+`;
 
 const Photo = styled.Image`
   background-color: #eee;

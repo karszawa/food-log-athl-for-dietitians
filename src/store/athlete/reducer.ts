@@ -1,4 +1,5 @@
 import { createReducer, PayloadAction } from "redux-starter-kit";
+import dayjs, { Dayjs } from "dayjs";
 import {
   ADD_ATHLETE_MESSAGE,
   AddAthleteMessagePayload,
@@ -6,6 +7,8 @@ import {
   DeleteAthleteMessagePayload,
   ADD_ATHLETE_RECORDS,
   AddAthleteRecordsPayload,
+  UPDATE_RANGE,
+  UpdateRangePayload,
 } from "./actions";
 import { Message } from "../../lib/firestore.d";
 import { Record } from "../../lib/foolog-api-client.d";
@@ -21,11 +24,19 @@ export interface State {
       [recordId: string]: Record;
     };
   };
+  range: {
+    from: string;
+    to: string;
+  };
 }
 
 const initialState: State = {
   messages: {},
   records: {},
+  range: {
+    from: dayjs().toISOString(),
+    to: dayjs().toISOString(),
+  },
 };
 
 export default createReducer(initialState, {
@@ -64,5 +75,8 @@ export default createReducer(initialState, {
     records.forEach(record => {
       state.records[athleteId][record.id] = record;
     });
+  },
+  [UPDATE_RANGE]: (state: State, action: PayloadAction<UpdateRangePayload>) => {
+    state.range = action.payload;
   },
 });
