@@ -23,20 +23,18 @@ import { GetRecordsDailyResponse } from "../../lib/foolog-api-client.d";
 import { State } from "./reducer";
 import { RootState } from "..";
 
+// Subscribe only new messages
 function* handleSubscribeAthleteMessage(
   action: PayloadAction<SubscribeAthleteMessagePayload>
 ) {
   const { athleteId } = action.payload;
-  const endAt = dayjs()
-    .subtract(12, "month")
-    .toDate();
 
   const channel = eventChannel<{ data: firebase.firestore.DocumentChange }>(
     emitter =>
       db
         .collection(`users/${athleteId}/messages`)
         .orderBy("ts", "desc")
-        .endAt(endAt)
+        .endAt(new Date())
         .onSnapshot(snapshot => {
           snapshot.docChanges().forEach(change => {
             emitter({ data: change });

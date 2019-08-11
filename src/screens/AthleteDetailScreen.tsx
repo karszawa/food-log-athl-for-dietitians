@@ -5,7 +5,11 @@ import { Container, Content, ListItem, Footer } from "native-base";
 import styled from "styled-components/native";
 import dayjs, { Dayjs } from "dayjs";
 import { useAuthentication } from "../hooks/useAuthentication";
-import { publishMessage, fetchLatestRecords } from "../store/athlete/actions";
+import {
+  publishMessage,
+  fetchLatestRecords,
+  subscribeAthleteMessage,
+} from "../store/athlete/actions";
 import { RootState } from "../store";
 import { Message, isMessage } from "../lib/firestore.d";
 import { Record, isRecord } from "../lib/foolog-api-client.d";
@@ -128,15 +132,21 @@ const useEntries = (sid: string, athleteId: string) => {
   };
 };
 
-const usePublishMessage = (sid: string, athleteId: string) => {
+const useMessage = (sid: string, athleteId: string) => {
   const dispatch = useDispatch();
-
-  return useCallback(
-    text => {
+  const sendMessage = useCallback(
+    (text: string) => {
       dispatch(publishMessage({ athleteId, text }));
     },
     [sid]
   );
+  useEffect(() => {
+    dispatch(subscribeAthleteMessage({ athleteId }));
+  }, [sid]);
+
+  return {
+    sendMessage,
+  };
 };
 
 interface DateSeparator {
@@ -169,7 +179,7 @@ const useScrollToEnd = () => {
 export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
-  const publishMessage = usePublishMessage(sid, athleteId);
+  const { sendMessage } = useMessage(sid, athleteId);
   const { entries, fetchMore, refreshing } = useEntries(sid, athleteId);
   const { ref: listRef, scrollToEnd } = useScrollToEnd();
 
@@ -201,7 +211,7 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
           onContentSizeChange={scrollToEnd}
         />
         <StyledFooter>
-          <CommentBox onSubmit={publishMessage} />
+          <CommentBox onSubmit={sendMessage} />
         </StyledFooter>
       </KeyboardAvoidingContainer>
     </StyledContainer>
