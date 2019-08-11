@@ -17,7 +17,7 @@ import {
 
 function* handleTrySignIn(action: PayloadAction<TrySignInPayload>) {
   try {
-    const result = yield call(
+    yield call(
       [FooLogAPIClient, FooLogAPIClient.postDietitiansSession],
       action.payload
     );

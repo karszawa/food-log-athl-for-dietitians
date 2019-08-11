@@ -3,8 +3,21 @@ import {
   NavigationScreenComponent,
   NavigationScreenProp,
   NavigationRoute,
+  Header,
 } from "react-navigation";
-import { Container, List, ListItem, Text, Content } from "native-base";
+import {
+  Container,
+  List,
+  ListItem,
+  Text,
+  Content,
+  Left,
+  Button,
+  Body,
+  Title,
+  Right,
+  Icon,
+} from "native-base";
 import { useSelector, useDispatch } from "react-redux";
 import dig from "object-dig";
 import styled from "styled-components";
@@ -26,10 +39,12 @@ const useDietitian = (sid: string) => {
 
 const navigateToAthleteDetail = (
   navigation: NavigationScreenProp<NavigationRoute>,
-  athleteId: string
+  athleteId: string,
+  name: string
 ) => () => {
   navigation.navigate(AthleteDetailScreenName, {
     athleteId,
+    name,
   });
 };
 
@@ -40,7 +55,11 @@ const AthleteListScreen: NavigationScreenComponent = props => {
   const listItems = athletes.map(athlete => (
     <StyledListItem key={athlete.id}>
       <TouchableOpacity
-        onPress={navigateToAthleteDetail(props.navigation, athlete.id)}>
+        onPress={navigateToAthleteDetail(
+          props.navigation,
+          athlete.id,
+          `${athlete.profile.family_name}${athlete.profile.first_name}`
+        )}>
         <AffiliationName>
           {dig(athlete, "profile", "data", "affiliation")}
         </AffiliationName>
@@ -60,9 +79,14 @@ const AthleteListScreen: NavigationScreenComponent = props => {
   );
 };
 
-AthleteListScreen.navigationOptions = {
+AthleteListScreen.navigationOptions = ({ navigation }) => ({
   title: "選手一覧",
-};
+  headerLeft: (
+    <Button transparent onPress={() => navigation.openDrawer()}>
+      <Icon name="menu" style={{ color: "white" }} />
+    </Button>
+  ),
+});
 
 const StyledListItem = styled(ListItem)`
   flex-direction: column;

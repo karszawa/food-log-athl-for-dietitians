@@ -16,14 +16,18 @@ import { AthleteListScreenName } from "../navigation/screen-names";
 
 const strings = {
   title: "FoodLog Athl",
-  guideText: `サインイン`,
+  guideText: "サインイン",
 };
 
-interface Params {}
+interface Params {
+  refresh: boolean;
+}
 
 interface Props {}
 
 const SignInPage: NavigationScreenComponent<Params, {}, Props> = props => {
+  useRouter({ navigation: props.navigation });
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { processing, errors } = useSelector((state: RootState) => state.auth);
@@ -34,7 +38,6 @@ const SignInPage: NavigationScreenComponent<Params, {}, Props> = props => {
   useEffect(() => {
     dispatch(restoreSession());
   }, []);
-  useRouter({ navigation: props.navigation });
 
   return (
     <>

@@ -6,6 +6,7 @@ import {
   SignInSuccessPayload,
   SIGN_IN_FAILED,
   SignInFailedPayload,
+  SIGN_OUT,
 } from "./actions";
 
 export interface State {
@@ -31,6 +32,11 @@ const initialState: State = {
 export default createReducer(initialState, {
   [TRY_SIGN_IN]: (state: State, action: PayloadAction<TrySignInPayload>) => {
     state.processing = true;
+  },
+  [SIGN_OUT]: (state: State) => {
+    state.username = "";
+    state.password = "";
+    state.authenticated = false;
   },
   [SIGN_IN_SUCCESS]: (
     state: State,

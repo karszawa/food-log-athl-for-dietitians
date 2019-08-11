@@ -175,6 +175,10 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   );
 };
 
+AthleteDetailScreen.navigationOptions = ({ navigation }) => ({
+  title: navigation.getParam("name"),
+});
+
 const StyledContainer = styled(Container)`
   background-color: #f5f5f5;
 `;
