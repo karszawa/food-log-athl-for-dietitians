@@ -65,4 +65,5 @@ const IconContainer = styled.View`
   justify-content: center;
   align-items: center;
   padding: 0 10px 0 16px;
+  height: 32px;
 `;
