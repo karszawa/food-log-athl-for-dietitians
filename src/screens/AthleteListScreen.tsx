@@ -3,7 +3,6 @@ import {
   NavigationScreenComponent,
   NavigationScreenProp,
   NavigationRoute,
-  Header,
 } from "react-navigation";
 import {
   Container,
@@ -11,16 +10,15 @@ import {
   ListItem,
   Text,
   Content,
-  Left,
   Button,
-  Body,
-  Title,
-  Right,
   Icon,
+  Body,
+  Left,
+  Thumbnail,
 } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
-import dig from "object-dig";
-import styled from "styled-components";
+import { get } from "lodash-es";
+import styled from "styled-components/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { RootState } from "../store";
 import { useAuthentication } from "../hooks/useAuthentication";
@@ -60,12 +58,14 @@ const AthleteListScreen: NavigationScreenComponent = props => {
           athlete.id,
           `${athlete.profile.family_name}${athlete.profile.first_name}`
         )}>
-        <AffiliationName>
-          {dig(athlete, "profile", "data", "affiliation")}
-        </AffiliationName>
-        <AthleteName>
-          {athlete.profile.family_name} {athlete.profile.first_name}
-        </AthleteName>
+        <Body>
+          <AffiliationName>
+            {get(athlete, "profile.data.affiliation", "所属なし")}
+          </AffiliationName>
+          <AthleteName>
+            {athlete.profile.family_name} {athlete.profile.first_name}
+          </AthleteName>
+        </Body>
       </TouchableOpacity>
     </StyledListItem>
   ));
@@ -89,17 +89,19 @@ AthleteListScreen.navigationOptions = ({ navigation }) => ({
 });
 
 const StyledListItem = styled(ListItem)`
-  flex-direction: column;
-  align-items: flex-start;
+  width: 100%;
 `;
 
 const AffiliationName = styled(Text)`
   font-size: 12px;
   font-weight: bold;
   text-align: left;
+  width: 100%;
 `;
 
 const AthleteName = styled(Text)`
+  font-size: 18px;
+  width: 100%;
   text-align: left;
 `;
 
