@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import { NavigationScreenComponent, FlatList } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Content, ListItem, Footer } from "native-base";
@@ -119,9 +119,12 @@ const useEntries = (sid: string, athleteId: string) => {
       [] as (Message | Record)[]
     );
 
+  const { processing } = useSelector((state: RootState) => state.athlete);
+
   return {
     fetchMore,
     entries,
+    refreshing: processing,
   };
 };
 
@@ -146,13 +149,31 @@ const isSeparator = (obj: any): obj is DateSeparator => {
   return Boolean(obj.separator);
 };
 
+type ItemT = Message | Record | DateSeparator;
+
+const useScrollToEnd = () => {
+  const listRef = useRef<FlatList<ItemT>>();
+  const [mountedAt] = useState(dayjs());
+  const scrollToEnd = useCallback(() => {
+    if (listRef.current && dayjs().diff(mountedAt, "second") < 2) {
+      listRef.current.scrollToEnd({ animated: false });
+    }
+  }, [listRef]);
+
+  return {
+    scrollToEnd,
+    ref: listRef,
+  };
+};
+
 export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
   const publishMessage = usePublishMessage(sid, athleteId);
-  const { entries, fetchMore } = useEntries(sid, athleteId);
+  const { entries, fetchMore, refreshing } = useEntries(sid, athleteId);
+  const { ref: listRef, scrollToEnd } = useScrollToEnd();
 
-  const renderItem = ({ item }: { item: Message | Record | DateSeparator }) => {
+  const renderItem = ({ item }: { item: ItemT }) => {
     if (isSeparator(item)) {
       return <DateSeparator date={item.date} />;
     }
@@ -170,13 +191,15 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
     <StyledContainer>
       <KeyboardAvoidingContainer
         keyboardVerticalOffset={ThemeVariables.footerHeight}>
-        <Content>
-          <FlatList
-            data={entries}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-          />
-        </Content>
+        <FlatList
+          ref={listRef}
+          data={entries}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          refreshing={refreshing}
+          onRefresh={fetchMore}
+          onContentSizeChange={scrollToEnd}
+        />
         <StyledFooter>
           <CommentBox onSubmit={publishMessage} />
         </StyledFooter>

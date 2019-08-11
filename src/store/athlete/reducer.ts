@@ -9,6 +9,8 @@ import {
   AddAthleteRecordsPayload,
   UPDATE_RANGE,
   UpdateRangePayload,
+  FETCH_LATEST_RECORDS,
+  FETCH_LATEST_RECORDS_SUCCEEDED,
 } from "./actions";
 import { Message } from "../../lib/firestore.d";
 import { Record } from "../../lib/foolog-api-client.d";
@@ -28,6 +30,7 @@ export interface State {
     from: string;
     to: string;
   };
+  processing: boolean;
 }
 
 const initialState: State = {
@@ -37,6 +40,7 @@ const initialState: State = {
     from: dayjs().toISOString(),
     to: dayjs().toISOString(),
   },
+  processing: true,
 };
 
 export default createReducer(initialState, {
@@ -78,5 +82,11 @@ export default createReducer(initialState, {
   },
   [UPDATE_RANGE]: (state: State, action: PayloadAction<UpdateRangePayload>) => {
     state.range = action.payload;
+  },
+  [FETCH_LATEST_RECORDS]: (state: State) => {
+    state.processing = true;
+  },
+  [FETCH_LATEST_RECORDS_SUCCEEDED]: (state: State) => {
+    state.processing = false;
   },
 });

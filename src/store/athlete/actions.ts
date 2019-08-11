@@ -90,3 +90,11 @@ export interface UpdateRangePayload {
 }
 
 export const updateRange = createAction<UpdateRangePayload>(UPDATE_RANGE);
+
+export const FETCH_LATEST_RECORDS_SUCCEEDED = "FETCH_LATEST_RECORDS_SUCCEEDED";
+
+export interface FetchLatestRecordsSucceededPayload {}
+
+export const fetchLatestRecordsSucceeded = createAction<
+  FetchLatestRecordsSucceededPayload
+>(FETCH_LATEST_RECORDS_SUCCEEDED);

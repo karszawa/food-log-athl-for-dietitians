@@ -12,7 +12,6 @@ interface Props {
 export const RecordEntry = (props: Props) => {
   const { athleteId, record } = props;
   const photos = record.photos.map(photo => (
-    // <Photo key={photo.id} source={{ uri: get(photo, "file.url", "") }} />
     <AuthPhoto key={photo.id} athleteId={athleteId} photo={photo} source={{}} />
   ));
   const datetime = dayjs(record.datetime).format("YYYY年M月D日 h:mm");

@@ -15,6 +15,7 @@ import {
   FETCH_LATEST_RECORDS,
   FetchLatestRecordsPayload,
   updateRange,
+  fetchLatestRecordsSucceeded,
 } from "./actions";
 import { db } from "../../lib/firestore";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
@@ -161,6 +162,7 @@ function* handleFetchLatestRecords(
   yield put(
     updateRange({ athleteId, from: actualFromDate.toISOString(), to: range.to })
   );
+  yield put(fetchLatestRecordsSucceeded());
 }
 
 export function* rootSaga() {
