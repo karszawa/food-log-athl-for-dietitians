@@ -5,7 +5,7 @@ import { DrawerItemsProps, DrawerItems, DrawerScene } from "react-navigation";
 export const CustomDrawerContentComponent: React.ComponentType<
   DrawerItemsProps
 > = props => {
-  const { navigation, items, ...rest } = props;
+  const { items, ...rest } = props;
   const filteredItems = items.filter(item =>
     routeNameToLabelMap.get(item.routeName)
   );
@@ -16,7 +16,6 @@ export const CustomDrawerContentComponent: React.ComponentType<
         <DrawerItems
           {...rest}
           items={filteredItems}
-          navigation={navigation}
           getLabel={(scene: DrawerScene) =>
             routeNameToLabelMap.get(scene.route.routeName)
           }
