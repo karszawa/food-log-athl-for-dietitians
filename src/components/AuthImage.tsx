@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, ImageProps } from "react-native";
+import { Image, ImageProps, View } from "react-native";
 import { get } from "lodash-es";
 import dayjs from "dayjs";
 import { FooLogAPIClient } from "../lib/foolog-api-client";
@@ -59,7 +59,9 @@ export const AuthImage = ({
 }: Props) => {
   const { photoIsValid, photo } = usePhoto({ athleteId, photo: originalPhoto });
 
-  return (
-    <Image {...rest} source={photoIsValid ? { uri: photo.file.url } : {}} />
+  return photoIsValid ? (
+    <Image {...rest} source={{ uri: photo.file.url }} />
+  ) : (
+    <View {...rest} />
   );
 };
