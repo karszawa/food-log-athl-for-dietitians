@@ -13,7 +13,7 @@ import {
 } from "./foolog-api-client.d";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
-const [GET, POST, PUT, DELETE] = ["GET", "POST", "PUT", "DELETE"];
+const [GET, POST, DELETE] = ["GET", "POST", "DELETE"];
 
 function qs(props: { [key: string]: any }) {
   return Object.entries(props)
