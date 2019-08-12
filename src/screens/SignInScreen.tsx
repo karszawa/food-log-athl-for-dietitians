@@ -14,7 +14,7 @@ import { trySignIn, restoreSession } from "../store/auth/actions";
 import { RootState } from "../store";
 import { OverlayLoading } from "../components/Loading";
 import { AthleteListScreenName } from "../navigation/screen-names";
-import { PRIMARY_PINK } from "../styles/color";
+import { PRIMARY_PINK, PRIMARY_ORANGE, STRONG_PINK } from "../styles/color";
 
 const strings = {
   title: "FoodLog Athl",
@@ -111,7 +111,7 @@ const SubmitButton = (props: ButtonProps) => (
     title={strings.submit}
     ViewComponent={LinearGradient}
     linearGradientProps={{
-      colors: ["#e98954", "#e954b5"],
+      colors: [PRIMARY_ORANGE, STRONG_PINK],
       start: { x: 0, y: 0.5 },
       end: { x: 1, y: 0.5 },
     }}
