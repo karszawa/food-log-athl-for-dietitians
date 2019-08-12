@@ -3,7 +3,7 @@ import { PayloadAction } from "redux-starter-kit";
 import { eventChannel, END, EventChannel } from "redux-saga";
 import dayjs, { Dayjs } from "dayjs";
 import { firestore } from "firebase";
-import { min } from "lodash-es";
+import { min, get } from "lodash-es";
 import {
   SUBSCRIBE_ATHLETE_MESSAGE,
   SubscribeAthleteMessagePayload,
@@ -74,6 +74,24 @@ function* fetchAthleteMessages(
   yield fork(handleMessageDocumentChange, athleteId, channel);
 }
 
+const isFirestoreTimestamp = (obj: any): obj is firestore.Timestamp => {
+  return obj && Boolean(obj.seconds);
+};
+
+function serialize(obj: any) {
+  if (isFirestoreTimestamp(obj)) {
+    return obj.toDate().toString();
+  }
+
+  if (typeof obj === "object") {
+    return Object.fromEntries(
+      Object.entries(obj).map(([key, val]) => [key, serialize(val)])
+    );
+  }
+
+  return obj;
+}
+
 function* handleMessageDocumentChange(
   athleteId: string,
   channel: EventChannel<{
@@ -96,9 +114,8 @@ function* handleMessageDocumentChange(
             id: change.doc.id,
             athleteId,
             message: {
-              ...data,
+              ...serialize(data),
               id: change.doc.id,
-              ts: data.ts.toDate().toString(),
             },
           })
         );
