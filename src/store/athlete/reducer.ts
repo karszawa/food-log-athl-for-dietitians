@@ -136,7 +136,7 @@ export default createReducer(initialState, {
   ) => {
     const { athleteId, records } = action.payload;
 
-    if (state.bodyRecords[athleteId]) {
+    if (!state.bodyRecords[athleteId]) {
       state.bodyRecords[athleteId] = {
         height: {},
         weight: {},

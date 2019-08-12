@@ -1,12 +1,13 @@
 import dayjs, { Dayjs } from "dayjs";
-import { Container, Footer, ListItem, Text, Button, Icon } from "native-base";
+import { Button, Container, Footer, Icon, ListItem } from "native-base";
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { FlatList, NavigationScreenComponent } from "react-navigation";
 import styled from "styled-components/native";
 import { CommentBox } from "../components/CommentBox";
 import { KeyboardAvoidingContainer } from "../components/KeyboardAvoidingContainer";
 import { MessageEntry } from "../components/MessageEntry";
+import { NutrientSummary } from "../components/NutrientSummary";
 import { RecordEntry } from "../components/RecordEntry";
 import { useAuthentication } from "../hooks/useAuthentication";
 import { Entry, useEntries } from "../hooks/useEntry";
@@ -15,7 +16,6 @@ import { useScrollToEnd } from "../hooks/useScrollToEnd";
 import { isMessage } from "../lib/firestore.d";
 import { isRecord } from "../lib/foolog-api-client.d";
 import ThemeVariables from "../native-base-theme/variables/platform.js";
-import { NutrientSummary } from "../components/NutrientSummary";
 import { AthleteStatisticsName } from "../navigation/screen-names";
 
 interface Params {
@@ -55,7 +55,11 @@ AthleteDetailScreen.navigationOptions = ({ navigation }) => ({
   headerRight: (
     <Button
       transparent
-      onPress={() => navigation.navigate(AthleteStatisticsName)}>
+      onPress={() =>
+        navigation.navigate(AthleteStatisticsName, {
+          athleteId: navigation.getParam("athleteId", ""),
+        })
+      }>
       <Icon name="bar-graph" type="Entypo" style={{ color: "white" }} />
     </Button>
   ),
