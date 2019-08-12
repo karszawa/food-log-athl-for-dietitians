@@ -7,11 +7,12 @@ import {
   Right,
   Icon,
 } from "native-base";
-import React from "react";
+import React, { useCallback } from "react";
 import { NavigationScreenComponent } from "react-navigation";
 import { last, get } from "lodash-es";
 import { useAuthentication } from "../hooks/useAuthentication";
 import { useStatistics } from "../hooks/useStatistics";
+import { AthleteStatisticsDetailScreenName } from "../navigation/screen-names";
 
 const strings = {
   bodyCompositionTitle: "体組成値",
@@ -27,13 +28,17 @@ interface Params {
 export const AthleteStatisticsScreen: NavigationScreenComponent<
   Params
 > = props => {
-  const { sid } = useAuthentication(props.navigation);
-  const { weight } = useStatistics(
-    sid,
-    props.navigation.getParam("athleteId", "")
-  );
-
+  const { navigation } = props;
+  const athleteId = navigation.getParam("athleteId");
+  const { sid } = useAuthentication(navigation);
+  const { weight } = useStatistics(sid, navigation.getParam("athleteId", ""));
   const lastWeight = get(last(weight), "value");
+  const onPressBodyWeight = useCallback(() => {
+    navigation.navigate(AthleteStatisticsDetailScreenName, {
+      athleteId,
+      type: "weight",
+    });
+  }, [navigation, athleteId]);
 
   return (
     <Container>
@@ -41,7 +46,7 @@ export const AthleteStatisticsScreen: NavigationScreenComponent<
         <Text>{strings.bodyCompositionTitle}</Text>
       </ListItem>
       <List>
-        <ListItem>
+        <ListItem onPress={onPressBodyWeight}>
           <Left>
             <Text>{strings.bodyWeightTitle}</Text>
           </Left>
@@ -73,6 +78,10 @@ export const AthleteStatisticsScreen: NavigationScreenComponent<
       </ListItem>
     </Container>
   );
+};
+
+AthleteStatisticsScreen.navigationOptions = {
+  title: "統計情報",
 };
 
 const styles = {

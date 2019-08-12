@@ -16,7 +16,7 @@ import { useScrollToEnd } from "../hooks/useScrollToEnd";
 import { isMessage } from "../lib/firestore.d";
 import { isRecord } from "../lib/foolog-api-client.d";
 import ThemeVariables from "../native-base-theme/variables/platform.js";
-import { AthleteStatisticsName } from "../navigation/screen-names";
+import { AthleteStatisticsScreenName } from "../navigation/screen-names";
 
 interface Params {
   athleteId: string;
@@ -27,7 +27,9 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const { sid } = useAuthentication(props.navigation);
   const { sendMessage } = useMessage(sid, athleteId);
   const { entries, fetchMore, refreshing } = useEntries(sid, athleteId);
-  const { ref: listRef, scrollToEnd } = useScrollToEnd<FlatList<ItemT>>();
+  const { ref: listRef, scrollToEnd } = useScrollToEnd<FlatList<ItemT>>({
+    animated: true,
+  });
 
   return (
     <StyledContainer>
@@ -56,7 +58,7 @@ AthleteDetailScreen.navigationOptions = ({ navigation }) => ({
     <Button
       transparent
       onPress={() =>
-        navigation.navigate(AthleteStatisticsName, {
+        navigation.navigate(AthleteStatisticsScreenName, {
           athleteId: navigation.getParam("athleteId", ""),
         })
       }>

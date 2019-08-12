@@ -6,12 +6,16 @@ interface Scrollable {
   scrollToEnd: (params?: { animated?: boolean }) => void;
 }
 
-export const useScrollToEnd = <T extends Scrollable>() => {
+export const useScrollToEnd = <T extends Scrollable>({
+  animated,
+}: {
+  animated?: boolean;
+}) => {
   const listRef = useRef<T>();
   const [mountedAt] = useState(dayjs());
   const scrollToEnd = useCallback(() => {
     if (listRef.current && dayjs().diff(mountedAt, "second") < 2) {
-      listRef.current.scrollToEnd({ animated: false });
+      listRef.current.scrollToEnd({ animated });
     }
   }, [listRef]);
 
