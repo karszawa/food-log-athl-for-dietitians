@@ -15,6 +15,7 @@ import { useScrollToEnd } from "../hooks/useScrollToEnd";
 import { isMessage } from "../lib/firestore.d";
 import { isRecord } from "../lib/foolog-api-client.d";
 import ThemeVariables from "../native-base-theme/variables/platform.js";
+import { NutrientSummary } from "../components/NutrientSummary";
 
 interface Params {
   athleteId: string;
@@ -70,6 +71,7 @@ const renderItem = (athleteId: string) => ({ item }: { item: ItemT }) => {
     <StyledListItem>
       <View style={{ flex: 1, width: "100%" }}>
         <DateSeparator date={dayjs(date)} />
+        <NutrientSummary entries={entries} athleteId={athleteId} />
         {entryComponents}
       </View>
     </StyledListItem>

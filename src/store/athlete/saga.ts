@@ -16,6 +16,9 @@ import {
   FetchLatestRecordsPayload,
   updateRange,
   fetchLatestRecordsSucceeded,
+  FetchNutritionAmountPayload,
+  fetchNutritionAmountSucceeded,
+  FETCH_NUTRITION_AMOUNT,
 } from "./actions";
 import { db } from "../../lib/firestore";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
@@ -163,9 +166,26 @@ function* handleFetchLatestRecords(
   yield put(fetchLatestRecordsSucceeded());
 }
 
+function* handleFetchNutritionAmount(
+  action: PayloadAction<FetchNutritionAmountPayload>
+) {
+  const data = yield call(
+    [FooLogAPIClient, FooLogAPIClient.getUserNutritionAmount],
+    action.payload
+  );
+
+  yield put(
+    fetchNutritionAmountSucceeded({
+      ...data,
+      athleteId: action.payload.athleteId,
+    })
+  );
+}
+
 export function* rootSaga() {
   yield takeEvery(SUBSCRIBE_ATHLETE_MESSAGE, handleSubscribeAthleteMessage);
   // yield takeEvery(FETCH_ATHLETE_RECORDS, handleFetchAthleteRecords);
   yield takeEvery(PUBLISH_MESSAGE, handlePublishMessage);
   yield takeEvery(FETCH_LATEST_RECORDS, handleFetchLatestRecords);
+  yield takeEvery(FETCH_NUTRITION_AMOUNT, handleFetchNutritionAmount);
 }

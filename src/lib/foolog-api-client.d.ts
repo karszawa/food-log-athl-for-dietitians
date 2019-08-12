@@ -175,3 +175,24 @@ export interface GetRecordsPhotosIdSignResponse extends ResponseData {
   url: string;
   expiry: Timestamptz;
 }
+
+export interface NutritionTarget {
+  id: Id24;
+  lower_bound: Numeric;
+  upper_bound: Numeric;
+  closed_lower_bound: boolean;
+  closed_upper_bound: boolean;
+}
+
+export interface GetUserNutritionAmountResponse extends ResponseData {
+  result: string;
+  updated_at: Timestamptz;
+  count: number;
+  latest_date: DateString;
+  records: {
+    id: Id24;
+    date: DateString;
+    updated_at: Timestamptz;
+    nutrition_target: NutritionTarget[];
+  }[];
+}

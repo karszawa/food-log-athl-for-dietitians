@@ -9,6 +9,7 @@ import {
   GetDietitiansResponse,
   GetRecordsDailyResponse,
   GetRecordsPhotosIdSignResponse,
+  GetUserNutritionAmountResponse,
 } from "./foolog-api-client.d";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
@@ -155,6 +156,37 @@ export class FooLogAPIClient {
 
   // API0103
   // async postSessionRefresh() {}
+
+  @logging(GET, "/user/nutrition/amount")
+  static async getUserNutritionAmount(props: {
+    athleteId: string;
+    offset?: number;
+    limit?: number;
+  }) {
+    const params = {
+      offset: props.offset || 0,
+      limit: props.limit || 1000,
+    };
+
+    const response = await this.fetch(
+      `${BASE_URL}/user/nutrition/amount?${qs(params)}`,
+      {
+        method: GET,
+        headers: {
+          "X-User-Id": props.athleteId,
+        },
+      }
+    );
+
+    const data: GetUserNutritionAmountResponse = await response.json();
+
+    switch (response.status) {
+      case 200:
+        return data;
+      default:
+        throw new InvalidRequest(data.error.error_code);
+    }
+  }
 
   // API1006
   @logging(GET, "/records/photos/:id/sign")

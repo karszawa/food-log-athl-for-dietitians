@@ -41,7 +41,7 @@ const usePhoto = ({
         })
         .catch(e => {
           // 404 Not Found
-          console.log(e);
+          console.error(e);
         });
     }
   }, [photo, setPhoto]);

@@ -1,19 +1,21 @@
+import dayjs from "dayjs";
 import { createReducer, PayloadAction } from "redux-starter-kit";
-import dayjs, { Dayjs } from "dayjs";
+import { Message } from "../../lib/firestore.d";
+import { NutritionTarget, Record } from "../../lib/foolog-api-client.d";
 import {
-  ADD_ATHLETE_MESSAGE,
   AddAthleteMessagePayload,
-  DELETE_ATHLETE_MESSAGE,
-  DeleteAthleteMessagePayload,
-  ADD_ATHLETE_RECORDS,
   AddAthleteRecordsPayload,
-  UPDATE_RANGE,
-  UpdateRangePayload,
+  ADD_ATHLETE_MESSAGE,
+  ADD_ATHLETE_RECORDS,
+  DeleteAthleteMessagePayload,
+  DELETE_ATHLETE_MESSAGE,
+  FetchNutritionAmountSucceededPayload,
   FETCH_LATEST_RECORDS,
   FETCH_LATEST_RECORDS_SUCCEEDED,
+  FETCH_NUTRITION_AMOUNT_SUCCEEDED,
+  UpdateRangePayload,
+  UPDATE_RANGE,
 } from "./actions";
-import { Message } from "../../lib/firestore.d";
-import { Record } from "../../lib/foolog-api-client.d";
 
 export interface State {
   messages: {
@@ -30,6 +32,11 @@ export interface State {
     from: string;
     to: string;
   };
+  nutritionTargets: {
+    [athlteId: string]: {
+      [id: string]: NutritionTarget;
+    };
+  };
   processing: boolean;
 }
 
@@ -40,6 +47,7 @@ const initialState: State = {
     from: dayjs().toISOString(),
     to: dayjs().toISOString(),
   },
+  nutritionTargets: {},
   processing: true,
 };
 
@@ -88,5 +96,25 @@ export default createReducer(initialState, {
   },
   [FETCH_LATEST_RECORDS_SUCCEEDED]: (state: State) => {
     state.processing = false;
+  },
+  [FETCH_NUTRITION_AMOUNT_SUCCEEDED]: (
+    state: State,
+    action: PayloadAction<FetchNutritionAmountSucceededPayload>
+  ) => {
+    const { records, athleteId } = action.payload;
+
+    records
+      .sort((a, b) => dayjs(a.date).diff(b.date))
+      .forEach(record => {
+        record.nutrition_target.forEach(nutritionTarget => {
+          if (!state.nutritionTargets[athleteId]) {
+            state.nutritionTargets[athleteId] = {};
+          }
+
+          state.nutritionTargets[athleteId][
+            nutritionTarget.id
+          ] = nutritionTarget;
+        });
+      });
   },
 });

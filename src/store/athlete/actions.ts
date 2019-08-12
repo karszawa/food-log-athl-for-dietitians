@@ -1,7 +1,10 @@
 import { createAction } from "redux-starter-kit";
 import { Dayjs } from "dayjs";
 import { Message } from "../../lib/firestore.d";
-import { Record } from "../../lib/foolog-api-client.d";
+import {
+  Record,
+  GetUserNutritionAmountResponse,
+} from "../../lib/foolog-api-client.d";
 
 export const SUBSCRIBE_ATHLETE_MESSAGE = "SUBSCRIBE_ATHLETE_MESSAGE";
 
@@ -98,3 +101,27 @@ export interface FetchLatestRecordsSucceededPayload {}
 export const fetchLatestRecordsSucceeded = createAction<
   FetchLatestRecordsSucceededPayload
 >(FETCH_LATEST_RECORDS_SUCCEEDED);
+
+export const FETCH_NUTRITION_AMOUNT = "FETCH_NUTRITION_AMOUNT";
+
+export interface FetchNutritionAmountPayload {
+  athleteId: string;
+  offset?: number;
+  limit?: number;
+}
+
+export const fetchNutritionAmount = createAction<FetchNutritionAmountPayload>(
+  FETCH_NUTRITION_AMOUNT
+);
+
+export const FETCH_NUTRITION_AMOUNT_SUCCEEDED =
+  "FETCH_NUTRITION_AMOUNT_SUCCEEDED";
+
+export interface FetchNutritionAmountSucceededPayload
+  extends GetUserNutritionAmountResponse {
+  athleteId: string;
+}
+
+export const fetchNutritionAmountSucceeded = createAction<
+  FetchNutritionAmountPayload
+>(FETCH_NUTRITION_AMOUNT_SUCCEEDED);
