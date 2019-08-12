@@ -1,29 +1,27 @@
-import React, { useEffect } from "react";
+import { get } from "lodash-es";
 import {
-  NavigationScreenComponent,
-  NavigationScreenProp,
-  NavigationRoute,
-} from "react-navigation";
-import {
+  Body,
+  Button,
   Container,
+  Content,
+  Icon,
   List,
   ListItem,
   Text,
-  Content,
-  Button,
-  Icon,
-  Body,
-  Left,
-  Thumbnail,
 } from "native-base";
-import { useSelector, useDispatch } from "react-redux";
-import { get } from "lodash-es";
-import styled from "styled-components/native";
+import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { RootState } from "../store";
+import {
+  NavigationRoute,
+  NavigationScreenComponent,
+  NavigationScreenProp,
+} from "react-navigation";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components/native";
 import { useAuthentication } from "../hooks/useAuthentication";
-import { fetchDietitian } from "../store/dietitian/actions";
 import { AthleteDetailScreenName } from "../navigation/screen-names";
+import { RootState } from "../store";
+import { fetchDietitian } from "../store/dietitian/actions";
 
 const useDietitian = (sid: string) => {
   const dispatch = useDispatch();
@@ -46,7 +44,7 @@ const navigateToAthleteDetail = (
   });
 };
 
-const AthleteListScreen: NavigationScreenComponent = props => {
+export const AthleteListScreen: NavigationScreenComponent = props => {
   const { sid } = useAuthentication(props.navigation);
   const { users: athletes } = useDietitian(sid);
 
@@ -104,5 +102,3 @@ const AthleteName = styled(Text)`
   width: 100%;
   text-align: left;
 `;
-
-export default AthleteListScreen;

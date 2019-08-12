@@ -196,3 +196,19 @@ export interface GetUserNutritionAmountResponse extends ResponseData {
     nutrition_target: NutritionTarget[];
   }[];
 }
+
+export interface GetRecordsBodyResponse extends ResponseData {
+  result: "OK";
+  updated_at?: Timestamptz;
+  count: number;
+  records: {
+    id: Id24;
+    datetime: Timestamptz;
+    date: DateString;
+    height_cm: Numeric;
+    weight_kg: Numeric;
+    data: any;
+    deleted: boolean;
+    updated_at: Timestamptz;
+  }[];
+}

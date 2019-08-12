@@ -1,8 +1,8 @@
 import { get } from "lodash-es";
 import React, { useEffect } from "react";
-import styled from "styled-components/native";
+import { Divider } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { View } from "react-native";
+import styled from "styled-components/native";
 import {
   CARBS_TAGNAME,
   ENERC_KCAL_TAGNAME,
@@ -13,7 +13,7 @@ import { Entry } from "../hooks/useEntry";
 import { isRecord, Nutrient } from "../lib/foolog-api-client.d";
 import { RootState } from "../store";
 import { fetchNutritionAmount } from "../store/athlete/actions";
-import { PRIMARY_PINK, PRIMARY_ORANGE } from "../styles/color";
+import { PRIMARY_ORANGE } from "../styles/color";
 
 const KEYS = [
   // ["Energy", ENERC_KCAL_TAGNAME],
@@ -190,9 +190,7 @@ const NutrientItemBarEntity = styled.View`
   background-color: ${(props: NutrientItemBarEntityProps) => props.color};
 `;
 
-const Separator = styled.View`
-  margin-bottom: 12px;
-  flex: 1;
-  border-top-width: 1px;
-  border-top-color: #ddd;
+const Separator = styled(Divider)`
+  margin-top: 8px;
+  margin-bottom: 16px;
 `;

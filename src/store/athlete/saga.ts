@@ -3,7 +3,7 @@ import { PayloadAction } from "redux-starter-kit";
 import { eventChannel, END, EventChannel } from "redux-saga";
 import dayjs, { Dayjs } from "dayjs";
 import { firestore } from "firebase";
-import { min, get } from "lodash-es";
+import { min } from "lodash-es";
 import {
   SUBSCRIBE_ATHLETE_MESSAGE,
   SubscribeAthleteMessagePayload,
@@ -19,6 +19,9 @@ import {
   FetchNutritionAmountPayload,
   fetchNutritionAmountSucceeded,
   FETCH_NUTRITION_AMOUNT,
+  FetchBodyRecordsPayload,
+  fetchBodyRecordsSucceeded,
+  FETCH_BODY_RECORDS,
 } from "./actions";
 import { db } from "../../lib/firestore";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
@@ -199,10 +202,27 @@ function* handleFetchNutritionAmount(
   );
 }
 
+function* handleFetchBodyRecords(
+  action: PayloadAction<FetchBodyRecordsPayload>
+) {
+  const data = yield call(
+    [FooLogAPIClient, FooLogAPIClient.getRecordsBody],
+    action.payload
+  );
+
+  yield put(
+    fetchBodyRecordsSucceeded({
+      ...data,
+      athleteId: action.payload.athleteId,
+    })
+  );
+}
+
 export function* rootSaga() {
   yield takeEvery(SUBSCRIBE_ATHLETE_MESSAGE, handleSubscribeAthleteMessage);
   // yield takeEvery(FETCH_ATHLETE_RECORDS, handleFetchAthleteRecords);
   yield takeEvery(PUBLISH_MESSAGE, handlePublishMessage);
   yield takeEvery(FETCH_LATEST_RECORDS, handleFetchLatestRecords);
   yield takeEvery(FETCH_NUTRITION_AMOUNT, handleFetchNutritionAmount);
+  yield takeEvery(FETCH_BODY_RECORDS, handleFetchBodyRecords);
 }

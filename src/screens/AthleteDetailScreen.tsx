@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
-import { Container, Footer, ListItem } from "native-base";
+import { Container, Footer, ListItem, Text, Button, Icon } from "native-base";
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { FlatList, NavigationScreenComponent } from "react-navigation";
 import styled from "styled-components/native";
 import { CommentBox } from "../components/CommentBox";
@@ -16,6 +16,7 @@ import { isMessage } from "../lib/firestore.d";
 import { isRecord } from "../lib/foolog-api-client.d";
 import ThemeVariables from "../native-base-theme/variables/platform.js";
 import { NutrientSummary } from "../components/NutrientSummary";
+import { AthleteStatisticsName } from "../navigation/screen-names";
 
 interface Params {
   athleteId: string;
@@ -51,6 +52,13 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
 
 AthleteDetailScreen.navigationOptions = ({ navigation }) => ({
   title: navigation.getParam("name"),
+  headerRight: (
+    <Button
+      transparent
+      onPress={() => navigation.navigate(AthleteStatisticsName)}>
+      <Icon name="bar-graph" type="Entypo" style={{ color: "white" }} />
+    </Button>
+  ),
 });
 
 type ItemT = [string, Entry[]];

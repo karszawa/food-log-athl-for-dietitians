@@ -15,6 +15,8 @@ import {
   FETCH_NUTRITION_AMOUNT_SUCCEEDED,
   UpdateRangePayload,
   UPDATE_RANGE,
+  FETCH_BODY_RECORDS_SUCCEEDED,
+  FetchBodyRecordsSucceededPayload,
 } from "./actions";
 
 export interface State {
@@ -37,6 +39,16 @@ export interface State {
       [id: string]: NutritionTarget;
     };
   };
+  bodyRecords: {
+    [athleteId: string]: {
+      height: {
+        [recordId: string]: { value: number; datetime: string };
+      };
+      weight: {
+        [recordId: string]: { value: number; datetime: string };
+      };
+    };
+  };
   processing: boolean;
 }
 
@@ -48,6 +60,7 @@ const initialState: State = {
     to: dayjs().toISOString(),
   },
   nutritionTargets: {},
+  bodyRecords: {},
   processing: true,
 };
 
@@ -103,18 +116,49 @@ export default createReducer(initialState, {
   ) => {
     const { records, athleteId } = action.payload;
 
+    if (!state.nutritionTargets[athleteId]) {
+      state.nutritionTargets[athleteId] = {};
+    }
+
     records
       .sort((a, b) => dayjs(a.date).diff(b.date))
       .forEach(record => {
         record.nutrition_target.forEach(nutritionTarget => {
-          if (!state.nutritionTargets[athleteId]) {
-            state.nutritionTargets[athleteId] = {};
-          }
-
           state.nutritionTargets[athleteId][
             nutritionTarget.id
           ] = nutritionTarget;
         });
       });
+  },
+  [FETCH_BODY_RECORDS_SUCCEEDED]: (
+    state: State,
+    action: PayloadAction<FetchBodyRecordsSucceededPayload>
+  ) => {
+    const { athleteId, records } = action.payload;
+
+    if (state.bodyRecords[athleteId]) {
+      state.bodyRecords[athleteId] = {
+        height: {},
+        weight: {},
+      };
+    }
+
+    records.forEach(record => {
+      const { id, datetime, weight_kg, height_cm } = record;
+
+      if (height_cm) {
+        state.bodyRecords[athleteId].height[id] = {
+          value: Number(height_cm),
+          datetime,
+        };
+      }
+
+      if (weight_kg) {
+        state.bodyRecords[athleteId].weight[id] = {
+          value: Number(weight_kg),
+          datetime,
+        };
+      }
+    });
   },
 });

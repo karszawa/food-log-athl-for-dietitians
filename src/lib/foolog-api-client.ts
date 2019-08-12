@@ -10,6 +10,8 @@ import {
   GetRecordsDailyResponse,
   GetRecordsPhotosIdSignResponse,
   GetUserNutritionAmountResponse,
+  DateString,
+  GetRecordsBodyResponse,
 } from "./foolog-api-client.d";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
@@ -260,6 +262,46 @@ export class FooLogAPIClient {
         throw new InvalidRequest(data.error.error_code);
       default:
         throw new InvalidRequest(JSON.stringify(data));
+    }
+  }
+
+  // API2202
+  @logging(GET, "/records/body")
+  static async getRecordsBody(props: {
+    athleteId: string;
+    offset?: number;
+    limit?: number;
+    from: DateString;
+    to: DateString;
+    sort?: 0 | 1;
+    include_deleted?: boolean;
+  }) {
+    const params = {
+      offset: props.offset | 0,
+      limit: props.limit | 200,
+      sort: props.sort | 0,
+      include_deleted: props.include_deleted || false,
+      from: props.from,
+      to: props.to,
+    };
+
+    const response = await this.fetch(
+      `${BASE_URL}/records/body?${qs(params)}`,
+      {
+        method: GET,
+        headers: {
+          "X-User-Id": props.athleteId,
+        },
+      }
+    );
+
+    const data: GetRecordsBodyResponse = await response.json();
+
+    switch (response.status) {
+      case 200:
+        return data;
+      default:
+        throw new InvalidRequest(data.error.error_code);
     }
   }
 
