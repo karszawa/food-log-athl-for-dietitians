@@ -27,6 +27,8 @@ const Container = styled.View`
   border-radius: 8px;
   max-width: 80%;
   padding: 6px 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   ${(props: ContainerProps) =>
     props.isFromAthlete ? "margin-right: auto;" : "margin-left: auto;"}
 `;

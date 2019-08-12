@@ -1,201 +1,31 @@
-import React, { useEffect, useCallback, useRef, useState } from "react";
-import { NavigationScreenComponent, FlatList } from "react-navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { Container, Content, ListItem, Footer } from "native-base";
-import styled from "styled-components/native";
 import dayjs, { Dayjs } from "dayjs";
-import { useAuthentication } from "../hooks/useAuthentication";
-import {
-  publishMessage,
-  fetchLatestRecords,
-  subscribeAthleteMessage,
-} from "../store/athlete/actions";
-import { RootState } from "../store";
-import { Message, isMessage } from "../lib/firestore.d";
-import { Record, isRecord } from "../lib/foolog-api-client.d";
-import { RecordEntry } from "../components/RecordEntry";
-import { MessageEntry } from "../components/MessageEntry";
+import { Container, Footer, ListItem } from "native-base";
+import React from "react";
+import { View } from "react-native";
+import { FlatList, NavigationScreenComponent } from "react-navigation";
+import styled from "styled-components/native";
 import { CommentBox } from "../components/CommentBox";
 import { KeyboardAvoidingContainer } from "../components/KeyboardAvoidingContainer";
+import { MessageEntry } from "../components/MessageEntry";
+import { RecordEntry } from "../components/RecordEntry";
+import { useAuthentication } from "../hooks/useAuthentication";
+import { Entry, useEntries } from "../hooks/useEntry";
+import { useMessage } from "../hooks/useMessage";
+import { useScrollToEnd } from "../hooks/useScrollToEnd";
+import { isMessage } from "../lib/firestore.d";
+import { isRecord } from "../lib/foolog-api-client.d";
 import ThemeVariables from "../native-base-theme/variables/platform.js";
 
 interface Params {
   athleteId: string;
 }
 
-// const useAthleteMessages = (sid: string, athleteId: string) => {
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     dispatch(subscribeAthleteMessage({ athleteId }));
-
-//     return () => {
-//       // TODO: Unsubscribe athlete messages
-//     };
-//   }, [sid, athleteId]);
-
-//   return Object.values(
-//     useSelector((state: RootState) => state.athlete.messages[athleteId] || [])
-//   ).filter(m => !m.type);
-// };
-
-// const useAthleteRecords = (
-//   sid: string,
-//   athleteId: string,
-// ) => {
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     dispatch(
-//       fetchAthleteRecords({
-//         athleteId,
-//         from: from.format("YYYY-MM-DD"),
-//         to: to.format("YYYY-MM-DD"),
-//       })
-//     );
-//   }, [sid, from, to]);
-
-//   return Object.values(
-//     useSelector((state: RootState) => state.athlete.records[athleteId] || [])
-//   );
-// };
-
-const getDateTime = (obj: Message | Record) => {
-  if (isMessage(obj)) {
-    return dayjs(obj.ts);
-  }
-
-  if (isRecord(obj)) {
-    return dayjs(obj.datetime);
-  }
-
-  return null;
-};
-
-const useEntries = (sid: string, athleteId: string) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchLatestRecords({ athleteId, count: 14 /* 2w */ }));
-  }, [sid, dispatch, athleteId]);
-
-  const fetchMore = useCallback(() => {
-    dispatch(fetchLatestRecords({ athleteId, count: 14 /* 2w */ }));
-  }, [dispatch, athleteId]);
-  const records = Object.values(
-    useSelector((state: RootState) => state.athlete.records[athleteId] || [])
-  );
-  const messages = Object.values(
-    useSelector((state: RootState) => state.athlete.messages[athleteId] || [])
-  ).filter(m => !m.type);
-
-  // MEMO: 日毎の食事記録をソートされた配列としてまとめる
-  const groups = ([] as (Message | Record)[])
-    .concat(messages)
-    .concat(records)
-    .reduce((groups, entry) => {
-      const currTsFmt = getDateTime(entry).format("YYYY/MM/DD");
-
-      if (!groups[currTsFmt]) {
-        groups[currTsFmt] = [];
-      }
-
-      groups[currTsFmt] = groups[currTsFmt].concat(entry);
-
-      return groups;
-    }, {});
-
-  // MEMO: 日毎にまとめやセパレータを挿入しつつFlattenする
-  const entries = Object.entries(groups)
-    .sort((a, b) => dayjs(a[0]).diff(dayjs(b[0])))
-    .reduce(
-      (entries, pair) => {
-        const date = dayjs(pair[0]);
-        const dateSeparator: DateSeparator = {
-          separator: true,
-          date,
-          id: date.toISOString(),
-        };
-        const dayEntries: (Record | Message)[] = pair[1] as any;
-
-        return [...entries, dateSeparator, ...dayEntries];
-      },
-      [] as (Message | Record)[]
-    );
-
-  const { processing } = useSelector((state: RootState) => state.athlete);
-
-  return {
-    fetchMore,
-    entries,
-    refreshing: processing,
-  };
-};
-
-const useMessage = (sid: string, athleteId: string) => {
-  const dispatch = useDispatch();
-  const sendMessage = useCallback(
-    (text: string) => {
-      dispatch(publishMessage({ athleteId, text }));
-    },
-    [sid]
-  );
-  useEffect(() => {
-    dispatch(subscribeAthleteMessage({ athleteId }));
-  }, [sid]);
-
-  return {
-    sendMessage,
-  };
-};
-
-interface DateSeparator {
-  separator: boolean;
-  date: Dayjs;
-  id: string;
-}
-
-const isSeparator = (obj: any): obj is DateSeparator => {
-  return Boolean(obj.separator);
-};
-
-type ItemT = Message | Record | DateSeparator;
-
-const useScrollToEnd = () => {
-  const listRef = useRef<FlatList<ItemT>>();
-  const [mountedAt] = useState(dayjs());
-  const scrollToEnd = useCallback(() => {
-    if (listRef.current && dayjs().diff(mountedAt, "second") < 2) {
-      listRef.current.scrollToEnd({ animated: false });
-    }
-  }, [listRef]);
-
-  return {
-    scrollToEnd,
-    ref: listRef,
-  };
-};
-
 export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const athleteId = props.navigation.getParam("athleteId", "");
   const { sid } = useAuthentication(props.navigation);
   const { sendMessage } = useMessage(sid, athleteId);
   const { entries, fetchMore, refreshing } = useEntries(sid, athleteId);
-  const { ref: listRef, scrollToEnd } = useScrollToEnd();
-
-  const renderItem = ({ item }: { item: ItemT }) => {
-    if (isSeparator(item)) {
-      return <DateSeparator date={item.date} />;
-    }
-
-    const e = isRecord(item) ? (
-      <RecordEntry athleteId={athleteId} record={item} />
-    ) : isMessage(item) ? (
-      <MessageEntry message={item} athleteId={athleteId} />
-    ) : null;
-
-    return <StyledListItem>{e}</StyledListItem>;
-  };
+  const { ref: listRef, scrollToEnd } = useScrollToEnd<FlatList<ItemT>>();
 
   return (
     <StyledContainer>
@@ -204,8 +34,8 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
         <FlatList
           ref={listRef}
           data={entries}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
+          renderItem={renderItem(athleteId)}
+          keyExtractor={item => item[0]}
           refreshing={refreshing}
           onRefresh={fetchMore}
           onContentSizeChange={scrollToEnd}
@@ -222,12 +52,39 @@ AthleteDetailScreen.navigationOptions = ({ navigation }) => ({
   title: navigation.getParam("name"),
 });
 
+type ItemT = [string, Entry[]];
+
+const renderItem = (athleteId: string) => ({ item }: { item: ItemT }) => {
+  const [date, entries] = item;
+  const entryComponents = entries
+    .map(entry =>
+      isRecord(entry) ? (
+        <RecordEntry key={entry.id} athleteId={athleteId} record={entry} />
+      ) : isMessage(entry) ? (
+        <MessageEntry key={entry.id} message={entry} athleteId={athleteId} />
+      ) : null
+    )
+    .filter(Boolean);
+
+  return (
+    <StyledListItem>
+      <View style={{ flex: 1, width: "100%" }}>
+        <DateSeparator date={dayjs(date)} />
+        {entryComponents}
+      </View>
+    </StyledListItem>
+  );
+};
+
 const StyledContainer = styled(Container)`
   background-color: #f5f5f5;
+  padding-top: 0;
+  padding-bottom: 0;
 `;
 
 const StyledListItem = styled(ListItem)`
   border-bottom-width: 0;
+  flex-direction: column;
 `;
 
 const StyledFooter = styled(Footer)`

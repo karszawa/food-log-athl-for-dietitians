@@ -44,6 +44,8 @@ const Container = styled.View`
   background-color: white;
   flex-direction: row;
   flex: 1;
+  margin-top: 8px;
+  margin-bottom: 8px;
 `;
 
 const ThumbnailContainer = styled.View`
@@ -77,7 +79,7 @@ const NoImagePhoto = () => <Photo source={require("../../assets/icon.png")} />;
 
 const DateTimeText = styled.Text`
   color: #666;
-  font-size: 16px;
+  font-size: 14px;
 `;
 
 const FoodItem = styled.View`
