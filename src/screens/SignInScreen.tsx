@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Input, Button } from "react-native-elements";
+import { Input, Button, ButtonProps } from "react-native-elements";
 import {
   NavigationScreenComponent,
   NavigationRoute,
@@ -8,15 +8,18 @@ import {
 import styled from "styled-components/native";
 import { Title, Card } from "native-base";
 import { useSelector, useDispatch } from "react-redux";
+import { LinearGradient } from "expo-linear-gradient";
 import { Container } from "../styles/layout";
 import { trySignIn, restoreSession } from "../store/auth/actions";
 import { RootState } from "../store";
 import { OverlayLoading } from "../components/Loading";
 import { AthleteListScreenName } from "../navigation/screen-names";
+import { PRIMARY_PINK } from "../styles/color";
 
 const strings = {
   title: "FoodLog Athl",
   guideText: "サインイン",
+  submit: "サインイン",
 };
 
 interface Params {
@@ -101,8 +104,18 @@ const PasswordInput = (props: any) => (
   />
 );
 
-const SubmitButton = (props: any) => (
-  <Button {...props} style={{ marginTop: 48 }} title="Submit" />
+const SubmitButton = (props: ButtonProps) => (
+  <Button
+    {...props}
+    style={{ marginTop: 48, borderRadius: 8 }}
+    title={strings.submit}
+    ViewComponent={LinearGradient}
+    linearGradientProps={{
+      colors: ["#e98954", "#e954b5"],
+      start: { x: 0, y: 0.5 },
+      end: { x: 1, y: 0.5 },
+    }}
+  />
 );
 
 const StyledContainer = styled(Container)`
@@ -114,7 +127,10 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledTitle = styled(Title)`
-  margin-bottom: 24px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 800;
 `;
 
 export default SignInPage;
