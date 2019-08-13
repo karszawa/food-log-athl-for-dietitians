@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import dayjs from "dayjs";
-import { Record } from "../lib/foolog-api-client.d";
+import { Record } from "../lib/foolog-api-client-types";
 import { AuthImage } from "./AuthImage";
 
 interface Props {

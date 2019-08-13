@@ -9,7 +9,9 @@
     "lint": "eslint src/**/*.{ts,tsx} --fix",
     "deploy": "expo publish --config app.prod.json",
     "optimize": "expo optimize",
-    "update": "npm-check-updates -u"
+    "update": "npm-check-updates -u",
+    "build:ios": "expo build:ios --config app.prod.json",
+    "build:android": "expo build:android --config app.prod.json"
   },
   "dependencies": {
     "dayjs": "^1.8.15",

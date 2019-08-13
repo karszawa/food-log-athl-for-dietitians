@@ -1,8 +1,8 @@
-type Id24 = string; // "To9ax-hXa_6Eetasheeje9a"
-type Id64 = string; // "quaiwai4kuJai4ahGhee-0leex4ieTaa0Hee5eeCaesh_ithahBuufaraegai8ru"
-type Numeric = string;
-type DateString = string; // "2023-03-12"
-type Timestamptz = string; // "2017-12-23T04:12:05Z”
+export type Id24 = string; // "To9ax-hXa_6Eetasheeje9a"
+export type Id64 = string; // "quaiwai4kuJai4ahGhee-0leex4ieTaa0Hee5eeCaesh_ithahBuufaraegai8ru"
+export type Numeric = string;
+export type DateString = string; // "2023-03-12"
+export type Timestamptz = string; // "2017-12-23T04:12:05Z”
 
 export type Auth = {
   username: string;
@@ -126,10 +126,14 @@ export interface ResponseData {
 export interface PostSessionResponse extends ResponseData {
   token: string;
   token_secret: string;
-  expiry_time: Datetimepz;
+  expiry_time: Timestamptz;
   refresh_token: string;
   refresh_token_secret: string;
-  refresh_token_expiry_time: Datetimepz;
+  refresh_token_expiry_time: Timestamptz;
+}
+
+export interface DeleteSessionResponse extends ResponseData {
+  result: "OK";
 }
 
 export interface GetDietitiansResponse extends ResponseData {
@@ -144,7 +148,7 @@ export interface GetDietitiansResponse extends ResponseData {
 
 export interface GetRecordsFoodsResponse extends ResponseData {
   result: "OK";
-  updated_at: Datetimepz;
+  updated_at: Timestamptz;
   count: number;
   records: Record[];
 }

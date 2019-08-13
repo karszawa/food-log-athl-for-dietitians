@@ -14,7 +14,7 @@ import { Entry, useEntries } from "../hooks/useEntry";
 import { useMessage } from "../hooks/useMessage";
 import { useScrollToEnd } from "../hooks/useScrollToEnd";
 import { isMessage } from "../lib/firestore.d";
-import { isRecord } from "../lib/foolog-api-client.d";
+import { isRecord } from "../lib/foolog-api-client-types";
 import ThemeVariables from "../native-base-theme/variables/platform.js";
 import { AthleteStatisticsScreenName } from "../navigation/screen-names";
 

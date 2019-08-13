@@ -4,7 +4,7 @@ import {
   FETCH_DIETITIAN_SUCCESS,
   FetchDietitianSuccessPayload,
 } from "./actions";
-import { User, Id24, File } from "../../lib/foolog-api-client.d";
+import { User, Id24, File } from "../../lib/foolog-api-client-types";
 
 export interface State {
   id?: Id24;

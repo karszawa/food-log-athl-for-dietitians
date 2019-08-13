@@ -10,7 +10,7 @@ import {
   PROTEIN_TAGNAME,
 } from "../constants";
 import { Entry } from "../hooks/useEntry";
-import { isRecord, Nutrient } from "../lib/foolog-api-client.d";
+import { isRecord, Nutrient } from "../lib/foolog-api-client-types";
 import { RootState } from "../store";
 import { fetchNutritionAmount } from "../store/athlete/actions";
 import { PRIMARY_ORANGE } from "../styles/color";

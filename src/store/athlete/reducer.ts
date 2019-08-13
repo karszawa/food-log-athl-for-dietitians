@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { createReducer, PayloadAction } from "redux-starter-kit";
 import { Message } from "../../lib/firestore.d";
-import { NutritionTarget, Record } from "../../lib/foolog-api-client.d";
+import { NutritionTarget, Record } from "../../lib/foolog-api-client-types";
 import {
   AddAthleteMessagePayload,
   AddAthleteRecordsPayload,

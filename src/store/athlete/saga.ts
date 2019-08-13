@@ -25,7 +25,7 @@ import {
 } from "./actions";
 import { db } from "../../lib/firestore";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
-import { GetRecordsDailyResponse } from "../../lib/foolog-api-client.d";
+import { GetRecordsDailyResponse } from "../../lib/foolog-api-client-types";
 import { State } from "./reducer";
 import { RootState } from "..";
 

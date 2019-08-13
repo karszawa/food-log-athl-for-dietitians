@@ -3,7 +3,7 @@ import { Image, ImageProps, View } from "react-native";
 import { get } from "lodash-es";
 import dayjs from "dayjs";
 import { FooLogAPIClient } from "../lib/foolog-api-client";
-import { Photo } from "../lib/foolog-api-client.d";
+import { Photo } from "../lib/foolog-api-client-types";
 
 interface Props extends ImageProps {
   athleteId: string;
@@ -62,6 +62,6 @@ export const AuthImage = ({
   return photoIsValid ? (
     <Image {...rest} source={{ uri: photo.file.url }} />
   ) : (
-    <View {...rest} />
-  );
+      <View {...rest} />
+    );
 };

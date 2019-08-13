@@ -4,7 +4,7 @@ import {
   Record,
   GetUserNutritionAmountResponse,
   GetRecordsBodyResponse,
-} from "../../lib/foolog-api-client.d";
+} from "../../lib/foolog-api-client-types";
 
 export const SUBSCRIBE_ATHLETE_MESSAGE = "SUBSCRIBE_ATHLETE_MESSAGE";
 
