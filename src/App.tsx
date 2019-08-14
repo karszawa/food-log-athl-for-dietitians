@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { AppLoading } from "expo";
 import { loadAsync } from "expo-font";
 import { StyleProvider } from "native-base";
+import { SentryErrorBoundary } from "./lib/SentryErrorBoundary";
 import Navigator from "./navigation";
 import { createStore } from "./store";
 import getTheme from "./native-base-theme/components";
@@ -18,11 +19,13 @@ export default () => {
   }
 
   return (
-    <Provider store={store}>
-      <StyleProvider style={getTheme(platform)}>
-        <Navigator />
-      </StyleProvider>
-    </Provider>
+    <SentryErrorBoundary>
+      <Provider store={store}>
+        <StyleProvider style={getTheme(platform)}>
+          <Navigator />
+        </StyleProvider>
+      </Provider>
+    </SentryErrorBoundary>
   );
 };
 

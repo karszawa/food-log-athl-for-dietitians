@@ -43,6 +43,7 @@
     "redux-saga": "^1.0.5",
     "redux-saga-watch-actions": "^0.2.0",
     "redux-starter-kit": "^0.6.3",
+    "sentry-expo": "^1.13.0",
     "styled-components": "^4.3.2"
   },
   "devDependencies": {
