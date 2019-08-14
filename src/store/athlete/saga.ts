@@ -86,6 +86,10 @@ function serialize(obj: any) {
     return obj.toDate().toString();
   }
 
+  if (!obj) {
+    return obj;
+  }
+
   if (typeof obj === "object") {
     return Object.fromEntries(
       Object.entries(obj).map(([key, val]) => [key, serialize(val)])
