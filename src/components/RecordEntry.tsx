@@ -75,7 +75,9 @@ const Photo = styled.Image`
   border-radius: 8px;
 `;
 
-const NoImagePhoto = () => <Photo source={require("../../assets/icon.png")} />;
+const NoImagePhoto = () => (
+  <Photo source={require("../../assets/no-photo-record.png")} />
+);
 
 const DateTimeText = styled.Text`
   color: #666;
