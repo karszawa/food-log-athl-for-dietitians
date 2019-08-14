@@ -37,22 +37,21 @@ export const AthleteListScreen: NavigationScreenComponent = props => {
   const { users: athletes } = useDietitian(sid);
 
   const listItems = athletes.map(athlete => (
-    <StyledListItem key={athlete.id}>
-      <TouchableOpacity
-        onPress={navigateToAthleteDetail(
-          props.navigation,
-          athlete.id,
-          `${athlete.profile.family_name}${athlete.profile.first_name}`
-        )}>
-        <Body>
-          <AffiliationName>
-            {get(athlete, "profile.data.affiliation", "所属なし")}
-          </AffiliationName>
-          <AthleteName>
-            {athlete.profile.family_name} {athlete.profile.first_name}
-          </AthleteName>
-        </Body>
-      </TouchableOpacity>
+    <StyledListItem
+      key={athlete.id}
+      onPress={navigateToAthleteDetail(
+        props.navigation,
+        athlete.id,
+        `${athlete.profile.family_name}${athlete.profile.first_name}`
+      )}>
+      <Body>
+        <AffiliationName>
+          {get(athlete, "profile.data.affiliation", "所属なし")}
+        </AffiliationName>
+        <AthleteName>
+          {athlete.profile.family_name} {athlete.profile.first_name}
+        </AthleteName>
+      </Body>
     </StyledListItem>
   ));
 
