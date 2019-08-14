@@ -16,22 +16,10 @@ import {
   NavigationScreenComponent,
   NavigationScreenProp,
 } from "react-navigation";
-import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/native";
 import { useAuthentication } from "../hooks/useAuthentication";
 import { AthleteDetailScreenName } from "../navigation/screen-names";
-import { RootState } from "../store";
-import { fetchDietitian } from "../store/dietitian/actions";
-
-const useDietitian = (sid: string) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchDietitian());
-  }, [sid]);
-
-  return useSelector((state: RootState) => state.dietitian);
-};
+import { useDietitian } from "../hooks/useDietitian";
 
 const navigateToAthleteDetail = (
   navigation: NavigationScreenProp<NavigationRoute>,

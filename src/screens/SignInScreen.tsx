@@ -1,20 +1,20 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { Input, Button, ButtonProps } from "react-native-elements";
+import { LinearGradient } from "expo-linear-gradient";
+import { Card, Title } from "native-base";
+import React, { useCallback, useEffect, useState } from "react";
+import { Button, ButtonProps, Input } from "react-native-elements";
 import {
-  NavigationScreenComponent,
   NavigationRoute,
+  NavigationScreenComponent,
   NavigationScreenProp,
 } from "react-navigation";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components/native";
-import { Title, Card } from "native-base";
-import { useSelector, useDispatch } from "react-redux";
-import { LinearGradient } from "expo-linear-gradient";
-import { Container } from "../styles/layout";
-import { trySignIn, restoreSession } from "../store/auth/actions";
-import { RootState } from "../store";
 import { OverlayLoading } from "../components/Loading";
 import { AthleteListScreenName } from "../navigation/screen-names";
-import { PRIMARY_PINK, PRIMARY_ORANGE, STRONG_PINK } from "../styles/color";
+import { RootState } from "../store";
+import { restoreSession, trySignIn } from "../store/auth/actions";
+import { PRIMARY_ORANGE, STRONG_PINK } from "../styles/color";
+import { Container } from "../styles/layout";
 
 const strings = {
   title: "FoodLog Athl",
@@ -86,6 +86,7 @@ const useRouter = ({ navigation }: RouterProps) => {
 const UserNameInput = (props: any) => (
   <Input
     {...props}
+    autoCapitalize="none"
     containerStyle={{ marginTop: 4 }}
     placeholder="ユーザー名"
     leftIcon={{ type: "material", name: "person" }}
