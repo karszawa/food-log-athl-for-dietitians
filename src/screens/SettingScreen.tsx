@@ -16,11 +16,13 @@ import { NavigationScreenComponent } from "react-navigation";
 import { useDispatch } from "react-redux";
 import styled from "styled-components/native";
 import { requestBundleUpdate } from "../store/app/actions";
+import { signOut } from "../store/auth/actions";
 
 const strings = {
   title: "設定",
   version: "バージョン",
   update: "更新",
+  signOut: "サインアウト",
 };
 
 interface Params {}
@@ -30,6 +32,9 @@ export const SettingScreen: NavigationScreenComponent<Params> = () => {
   const dispatch = useDispatch();
   const onPressUpdate = useCallback(() => {
     dispatch(requestBundleUpdate());
+  }, [dispatch]);
+  const onPressSignOut = useCallback(() => {
+    dispatch(signOut());
   }, [dispatch]);
 
   return (
@@ -49,6 +54,13 @@ export const SettingScreen: NavigationScreenComponent<Params> = () => {
               </TouchableOpacity>
             </Right>
           </ListItem>
+          <ListItem>
+            <Content>
+              <TouchableOpacity onPress={onPressSignOut}>
+                <DangerLinkText>{strings.signOut}</DangerLinkText>
+              </TouchableOpacity>
+            </Content>
+          </ListItem>
         </List>
       </Content>
     </Container>
@@ -66,4 +78,8 @@ SettingScreen.navigationOptions = ({ navigation }) => ({
 
 const LinkText = styled(Text)`
   color: dodgerblue;
+`;
+
+const DangerLinkText = styled(Text)`
+  color: crimson;
 `;
