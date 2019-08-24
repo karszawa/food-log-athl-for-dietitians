@@ -272,9 +272,9 @@ function* handleNewRecordMessage(
     (state: RootState) => state.athlete.records[athleteId][recordId]
   );
 
-  // if (record) {
-  //   return;
-  // }
+  if (record) {
+    return;
+  }
 
   const { recordId } = JSON.parse(message.text);
   yield put(fetchAthleteRecords({ athleteId, recordId }));
