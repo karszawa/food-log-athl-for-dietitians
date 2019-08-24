@@ -9,8 +9,7 @@ import {
   ListItem,
   Text,
 } from "native-base";
-import React, { useEffect } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import React from "react";
 import {
   NavigationRoute,
   NavigationScreenComponent,

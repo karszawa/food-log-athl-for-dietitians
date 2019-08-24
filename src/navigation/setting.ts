@@ -3,7 +3,7 @@ import { SettingScreenName } from "./screen-names";
 import { SettingScreen } from "../screens/SettingScreen";
 import { navigationOptions } from "../styles/navigation";
 
-export default createStackNavigator(
+const navigator = createStackNavigator(
   {
     [SettingScreenName]: {
       screen: SettingScreen,
@@ -16,3 +16,5 @@ export default createStackNavigator(
     },
   }
 );
+
+export default navigator;
