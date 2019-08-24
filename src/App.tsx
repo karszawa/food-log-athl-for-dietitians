@@ -8,6 +8,7 @@ import Navigator from "./navigation";
 import { createStore } from "./store";
 import getTheme from "./native-base-theme/components";
 import platform from "./native-base-theme/variables/material.js";
+import { ProgressOverlay } from "./components/ProgressOverlay";
 
 const store = createStore();
 
@@ -22,7 +23,9 @@ export default () => {
     <SentryErrorBoundary>
       <Provider store={store}>
         <StyleProvider style={getTheme(platform)}>
-          <Navigator />
+          <ProgressOverlay>
+            <Navigator />
+          </ProgressOverlay>
         </StyleProvider>
       </Provider>
     </SentryErrorBoundary>
