@@ -278,13 +278,18 @@ export class FooLogAPIClient {
     to: Dayjs;
     food: boolean;
     latest: boolean;
+    expiry_sec?: number;
+    size?: "S" | "M" | "L";
   }) {
     const params = {
       ...props,
       expiry_sec: 900,
+      size: "S",
       from: props.from.format("YYYY-MM-DD"),
       to: props.to.format("YYYY-MM-DD"),
     };
+
+    console.log(params);
 
     return this.fetch<GetRecordsDailyResponse>(
       `${BASE_URL}/records/daily?${qs(params)}`,

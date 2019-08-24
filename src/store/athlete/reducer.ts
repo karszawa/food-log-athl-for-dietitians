@@ -31,8 +31,10 @@ export interface State {
     };
   };
   range: {
-    from: string;
-    to: string;
+    [athleteId: string]: {
+      from: string;
+      to: string;
+    };
   };
   nutritionTargets: {
     [athlteId: string]: {
@@ -55,10 +57,7 @@ export interface State {
 const initialState: State = {
   messages: {},
   records: {},
-  range: {
-    from: dayjs().toISOString(),
-    to: dayjs().toISOString(),
-  },
+  range: {},
   nutritionTargets: {},
   bodyRecords: {},
   processing: true,
@@ -102,7 +101,14 @@ export default createReducer(initialState, {
     });
   },
   [UPDATE_RANGE]: (state: State, action: PayloadAction<UpdateRangePayload>) => {
-    state.range = action.payload;
+    const { athleteId, from, to } = action.payload;
+
+    console.log("update-range", from, to);
+
+    state.range[athleteId] = {
+      from,
+      to,
+    };
   },
   [FETCH_LATEST_RECORDS]: (state: State) => {
     state.processing = true;

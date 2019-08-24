@@ -3,7 +3,7 @@ import { PayloadAction } from "redux-starter-kit";
 import { eventChannel, END, EventChannel } from "redux-saga";
 import dayjs, { Dayjs } from "dayjs";
 import { firestore } from "firebase";
-import { min } from "lodash-es";
+import { min, get } from "lodash-es";
 import {
   SUBSCRIBE_ATHLETE_MESSAGE,
   SubscribeAthleteMessagePayload,
@@ -163,8 +163,10 @@ function* handleFetchLatestRecords(
 ) {
   const { athleteId, count } = action.payload;
   const { range }: State = yield select((state: RootState) => state.athlete);
-  const nextFromDate = dayjs(range.from).subtract(count, "day");
-  const nextToDate = dayjs(range.from);
+  const originalFromDate = get(range[athleteId], "from", dayjs().toISOString());
+  const originalToDate = get(range[athleteId], "to", dayjs().toISOString());
+  const nextFromDate = dayjs(originalFromDate).subtract(count, "day");
+  const nextToDate = dayjs(originalFromDate);
 
   const response: GetRecordsDailyResponse = yield call(
     [FooLogAPIClient, FooLogAPIClient.getRecordsDaily],
@@ -185,7 +187,11 @@ function* handleFetchLatestRecords(
   yield put(addAthleteRecords({ athleteId, records }));
   yield call(fetchAthleteMessages, athleteId, actualFromDate, nextToDate);
   yield put(
-    updateRange({ athleteId, from: actualFromDate.toISOString(), to: range.to })
+    updateRange({
+      athleteId,
+      from: actualFromDate.toISOString(),
+      to: originalToDate,
+    })
   );
   yield put(fetchLatestRecordsSucceeded());
 }
