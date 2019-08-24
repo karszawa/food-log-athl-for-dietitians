@@ -16,7 +16,7 @@ import { NavigationScreenComponent } from "react-navigation";
 import { useDispatch } from "react-redux";
 import styled from "styled-components/native";
 import { requestBundleUpdate } from "../store/app/actions";
-import { signOut } from "../store/auth/actions";
+import { useAuthentication } from "../hooks/useAuthentication";
 
 const strings = {
   title: "設定",
@@ -27,14 +27,14 @@ const strings = {
 
 interface Params {}
 
-export const SettingScreen: NavigationScreenComponent<Params> = () => {
+export const SettingScreen: NavigationScreenComponent<Params> = ({
+  navigation,
+}) => {
+  const { signOut } = useAuthentication(navigation);
   const { sdkVersion, revisionId } = Constants.manifest;
   const dispatch = useDispatch();
   const onPressUpdate = useCallback(() => {
     dispatch(requestBundleUpdate());
-  }, [dispatch]);
-  const onPressSignOut = useCallback(() => {
-    dispatch(signOut());
   }, [dispatch]);
 
   return (
@@ -56,7 +56,7 @@ export const SettingScreen: NavigationScreenComponent<Params> = () => {
           </ListItem>
           <ListItem>
             <Content>
-              <TouchableOpacity onPress={onPressSignOut}>
+              <TouchableOpacity onPress={signOut}>
                 <DangerLinkText>{strings.signOut}</DangerLinkText>
               </TouchableOpacity>
             </Content>
