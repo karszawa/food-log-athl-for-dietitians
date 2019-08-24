@@ -1,23 +1,26 @@
-import { NavigationScreenComponent } from "react-navigation";
+import Constants from "expo-constants";
 import {
+  Button,
   Container,
+  Content,
+  Icon,
+  Left,
   List,
   ListItem,
   Right,
-  Left,
   Text,
-  Content,
 } from "native-base";
 import React, { useCallback } from "react";
-import Constants from "expo-constants";
+import { TouchableOpacity } from "react-native";
+import { NavigationScreenComponent } from "react-navigation";
 import { useDispatch } from "react-redux";
-import { Button } from "react-native-elements";
+import styled from "styled-components/native";
 import { requestBundleUpdate } from "../store/app/actions";
 
 const strings = {
   title: "設定",
   version: "バージョン",
-  update: "アプリの更新を確認して更新する",
+  update: "更新",
 };
 
 interface Params {}
@@ -35,18 +38,32 @@ export const SettingScreen: NavigationScreenComponent<Params> = () => {
         <List>
           <ListItem>
             <Left>
-              <Text>バージョン</Text>
+              <Text>{strings.version}</Text>
             </Left>
-            <Right>
+            <Content>
               <Text>{revisionId || sdkVersion}</Text>
+            </Content>
+            <Right>
+              <TouchableOpacity onPress={onPressUpdate}>
+                <LinkText>{strings.update}</LinkText>
+              </TouchableOpacity>
             </Right>
           </ListItem>
         </List>
-
-        <Button onPress={onPressUpdate} title={strings.update} type="clear" />
       </Content>
     </Container>
   );
 };
 
-SettingScreen.navigationOptions = { title: "設定" };
+SettingScreen.navigationOptions = ({ navigation }) => ({
+  title: "設定",
+  headerLeft: (
+    <Button transparent onPress={() => navigation.openDrawer()}>
+      <Icon name="menu" style={{ color: "white" }} />
+    </Button>
+  ),
+});
+
+const LinkText = styled(Text)`
+  color: dodgerblue;
+`;

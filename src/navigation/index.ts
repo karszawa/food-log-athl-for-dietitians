@@ -9,8 +9,8 @@ const navigator = createDrawerNavigator(
   {
     Main: MainNavigator,
     Auth: AuthNavigator,
-    Unauth: UnauthNavigator,
     Setting: SettingNavigator,
+    Unauth: UnauthNavigator,
   },
   {
     initialRouteName: "Auth",

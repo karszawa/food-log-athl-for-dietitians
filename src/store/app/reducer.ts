@@ -2,12 +2,12 @@ import { createReducer, PayloadAction } from "redux-starter-kit";
 import { SHOW_PROGRESS, ShowProgressPayload, HIDE_PROGRESS } from "./actions";
 
 export interface State {
-  isLoading: boolean;
+  refc: number;
   message: string;
 }
 
 const initialState: State = {
-  isLoading: false,
+  refc: 0,
   message: "",
 };
 
@@ -16,11 +16,11 @@ export default createReducer(initialState, {
     state: State,
     action: PayloadAction<ShowProgressPayload>
   ) => {
-    state.isLoading = true;
+    state.refc += 1;
     state.message = action.payload.message;
   },
   [HIDE_PROGRESS]: (state: State) => {
-    state.isLoading = false;
+    state.refc -= 1;
     state.message = "";
   },
 });

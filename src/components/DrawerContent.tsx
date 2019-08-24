@@ -27,8 +27,8 @@ export const CustomDrawerContentComponent: React.ComponentType<
 
 const routeNameToLabelMap = new Map([
   ["Main", "選手一覧"],
-  ["Unauth", "サインアウト"],
   ["Setting", "設定"],
+  ["Unauth", "サインアウト"],
 ]);
 
 const styles = StyleSheet.create({
