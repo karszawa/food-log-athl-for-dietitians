@@ -1,42 +1,42 @@
-import { take, put, call, takeEvery, select, fork } from "redux-saga/effects";
-import { PayloadAction } from "redux-starter-kit";
-import { eventChannel, END, EventChannel } from "redux-saga";
 import dayjs, { Dayjs } from "dayjs";
 import { firestore } from "firebase";
-import { min, get } from "lodash-es";
-import {
-  SUBSCRIBE_ATHLETE_MESSAGE,
-  SubscribeAthleteMessagePayload,
-  addAthleteMessage,
-  deleteAthleteMessage,
-  addAthleteRecords,
-  PublishMessagePayload,
-  PUBLISH_MESSAGE,
-  FETCH_LATEST_RECORDS,
-  FetchLatestRecordsPayload,
-  updateRange,
-  fetchLatestRecordsSucceeded,
-  FetchNutritionAmountPayload,
-  fetchNutritionAmountSucceeded,
-  FETCH_NUTRITION_AMOUNT,
-  FetchBodyRecordsPayload,
-  fetchBodyRecordsSucceeded,
-  FETCH_BODY_RECORDS,
-  AddAthleteMessagePayload,
-  ADD_ATHLETE_MESSAGE,
-  fetchAthleteRecords,
-  FetchAthleteRecordPayload,
-  FETCH_ATHLETE_RECORD,
-  fetchAthleteRecordSucceeded,
-} from "./actions";
+import { get, min } from "lodash-es";
+import { END, eventChannel, EventChannel } from "redux-saga";
+import { call, fork, put, select, take, takeEvery } from "redux-saga/effects";
+import { PayloadAction } from "redux-starter-kit";
 import { db } from "../../lib/firestore";
+import { Message } from "../../lib/firestore-types";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
 import {
   GetRecordsDailyResponse,
   GetRecordsFoodsIdResponse,
 } from "../../lib/foolog-api-client-types";
+import {
+  addAthleteMessage,
+  AddAthleteMessagePayload,
+  addAthleteRecords,
+  ADD_ATHLETE_MESSAGE,
+  deleteAthleteMessage,
+  FetchAthleteRecordPayload,
+  fetchAthleteRecords,
+  fetchAthleteRecordSucceeded,
+  FetchBodyRecordsPayload,
+  fetchBodyRecordsSucceeded,
+  FetchLatestRecordsPayload,
+  fetchLatestRecordsSucceeded,
+  FetchNutritionAmountPayload,
+  fetchNutritionAmountSucceeded,
+  FETCH_ATHLETE_RECORD,
+  FETCH_BODY_RECORDS,
+  FETCH_LATEST_RECORDS,
+  FETCH_NUTRITION_AMOUNT,
+  PublishMessagePayload,
+  PUBLISH_MESSAGE,
+  SubscribeAthleteMessagePayload,
+  SUBSCRIBE_ATHLETE_MESSAGE,
+  updateRange,
+} from "./actions";
 import { State } from "./reducer";
-import { Message } from "../../lib/firestore-types";
 import { RootState } from "..";
 
 // Subscribe only new messages
