@@ -1,4 +1,4 @@
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator, createDrawerNavigator } from "react-navigation";
 import { AthleteDetailScreen } from "../screens/AthleteDetailScreen";
 import { AthleteListScreen } from "../screens/AthleteListScreen";
 import { AthleteStatisticsScreen } from "../screens/AthleteStatisticsScreen";
@@ -10,6 +10,8 @@ import {
   AthleteStatisticsScreenName,
   AthleteStatisticsDetailScreenName,
 } from "./screen-names";
+import SettingNavigator from "./setting";
+import { CustomDrawerContentComponent } from "../components/DrawerContent";
 
 const navigator = createStackNavigator(
   {
@@ -34,4 +36,12 @@ const navigator = createStackNavigator(
   }
 );
 
-export default navigator;
+export default createDrawerNavigator(
+  {
+    Main: navigator,
+    Setting: SettingNavigator,
+  },
+  {
+    contentComponent: CustomDrawerContentComponent,
+  }
+);

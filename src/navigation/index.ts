@@ -1,18 +1,14 @@
-import { createAppContainer, createDrawerNavigator } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import AuthNavigator from "./auth";
 import MainNavigator from "./main";
-import SettingNavigator from "./setting";
-import { CustomDrawerContentComponent } from "../components/DrawerContent";
 
-const navigator = createDrawerNavigator(
+const navigator = createSwitchNavigator(
   {
     Main: MainNavigator,
     Auth: AuthNavigator,
-    Setting: SettingNavigator,
   },
   {
     initialRouteName: "Auth",
-    contentComponent: CustomDrawerContentComponent,
   }
 );
 
