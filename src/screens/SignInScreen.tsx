@@ -57,10 +57,9 @@ const SignInPage: NavigationScreenComponent<Params, {}, Props> = props => {
             onChangeText={setPassword}
             errorMessage={errors && errors.password}
           />
-          <SubmitButton onPress={onPressSubmitButton} />
+          <SubmitButton onPress={onPressSubmitButton} loading={processing} />
         </StyledCard>
       </StyledContainer>
-      <OverlayLoading isVisible={processing} />
     </>
   );
 };

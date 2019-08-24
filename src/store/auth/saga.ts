@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import { PayloadAction } from "redux-starter-kit";
-import { call, put, fork, takeEvery, select } from "redux-saga/effects";
+import { call, put, fork, takeEvery } from "redux-saga/effects";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
 import { extendsRequestError } from "../../lib/error";
 import {
