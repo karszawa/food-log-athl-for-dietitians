@@ -19,6 +19,7 @@ import {
   FetchBodyRecordsSucceededPayload,
   FETCH_ATHLETE_RECORD_SUCCEEDED,
   FetchAthleteRecordSucceededPayload,
+  RESET_ATHLETE,
 } from "./actions";
 import { FetchDietitianSuccessPayload } from "../dietitian/actions";
 
@@ -67,6 +68,11 @@ const initialState: State = {
 };
 
 export default createReducer(initialState, {
+  [RESET_ATHLETE]: (state: State) => {
+    Object.entries(initialState).forEach(([key, val]) => {
+      state[key] = val;
+    });
+  },
   [ADD_ATHLETE_MESSAGE]: (
     state: State,
     action: PayloadAction<AddAthleteMessagePayload>

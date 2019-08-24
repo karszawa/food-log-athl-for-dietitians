@@ -16,3 +16,7 @@ export type FetchDietitianSuccessPayload = GetDietitiansResponse;
 export const fetchDietitianSuccess = createAction<FetchDietitianSuccessPayload>(
   FETCH_DIETITIAN_SUCCESS
 );
+
+export const RESET_DIETITIAN = "RESET_DIETITIAN";
+
+export const resetDietitian = createAction(RESET_DIETITIAN);

@@ -170,3 +170,7 @@ export interface FetchAthleteRecordSucceededPayload {
 export const fetchAthleteRecordSucceeded = createAction<
   FetchAthleteRecordSucceededPayload
 >(FETCH_ATHLETE_RECORD_SUCCEEDED);
+
+export const RESET_ATHLETE = "RESET_ATHLETE";
+
+export const resetAthlete = createAction(RESET_ATHLETE);

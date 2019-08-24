@@ -14,6 +14,8 @@ import {
   RESTORE_SESSION,
   trySignIn,
 } from "./actions";
+import { resetAthlete } from "../athlete/actions";
+import { resetDietitian } from "../dietitian/actions";
 
 function* handleTrySignIn(action: PayloadAction<TrySignInPayload>) {
   try {
@@ -83,6 +85,8 @@ function* handleSignInSuccess(action: PayloadAction<SignInSuccessPayload>) {
 function* handleSignOut() {
   yield call([SecureStore, SecureStore.deleteItemAsync], "username");
   yield call([SecureStore, SecureStore.deleteItemAsync], "password");
+  yield put(resetAthlete());
+  yield put(resetDietitian());
 }
 
 export function* rootSaga() {

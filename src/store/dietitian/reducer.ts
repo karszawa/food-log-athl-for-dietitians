@@ -3,6 +3,7 @@ import {
   FETCH_DIETITIAN,
   FETCH_DIETITIAN_SUCCESS,
   FetchDietitianSuccessPayload,
+  RESET_DIETITIAN,
 } from "./actions";
 import { User, Id24, File } from "../../lib/foolog-api-client-types";
 
@@ -22,6 +23,11 @@ const initialState: State = {
 };
 
 export default createReducer(initialState, {
+  [RESET_DIETITIAN]: (state: State) => {
+    Object.entries(initialState).forEach(([key, val]) => {
+      state[key] = val;
+    });
+  },
   [FETCH_DIETITIAN]: (state: State) => {
     state.processing = true;
   },
