@@ -7,15 +7,12 @@ import {
   Left,
   Text,
   Content,
-  Button,
 } from "native-base";
 import React, { useCallback } from "react";
 import Constants from "expo-constants";
 import { useDispatch } from "react-redux";
-import {
-  REQUEST_BUNDLE_UPDATE,
-  requestBundleUpdate,
-} from "../store/app/actions";
+import { Button } from "react-native-elements";
+import { requestBundleUpdate } from "../store/app/actions";
 
 const strings = {
   title: "設定",
@@ -34,23 +31,20 @@ export const SettingScreen: NavigationScreenComponent<Params> = () => {
 
   return (
     <Container>
-      <List>
-        <ListItem>
-          <Left>
-            <Text>バージョン</Text>
-          </Left>
-          <Right>
-            <Text>{revisionId || sdkVersion}</Text>
-          </Right>
-        </ListItem>
-        <ListItem>
-          <Content>
-            <Button onPress={onPressUpdate} transparent>
-              <Text>{strings.update}</Text>
-            </Button>
-          </Content>
-        </ListItem>
-      </List>
+      <Content>
+        <List>
+          <ListItem>
+            <Left>
+              <Text>バージョン</Text>
+            </Left>
+            <Right>
+              <Text>{revisionId || sdkVersion}</Text>
+            </Right>
+          </ListItem>
+        </List>
+
+        <Button onPress={onPressUpdate} title={strings.update} type="clear" />
+      </Content>
     </Container>
   );
 };
