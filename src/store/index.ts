@@ -1,11 +1,13 @@
 import { getDefaultMiddleware, configureStore } from "redux-starter-kit";
 import reducer from "./reducer";
+import { State as AppState } from "./app/reducer";
 import { State as AthleteState } from "./athlete/reducer";
 import { State as AuthState } from "./auth/reducer";
 import { State as DietitianState } from "./dietitian/reducer";
 import saga, { rootSaga } from "./saga";
 
 export interface RootState {
+  app: AppState;
   athlete: AthleteState;
   auth: AuthState;
   dietitian: DietitianState;

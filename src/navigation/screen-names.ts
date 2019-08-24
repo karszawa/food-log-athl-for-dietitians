@@ -6,3 +6,4 @@ export const AthleteDetailScreenName = "AthleteDetailScreenName";
 export const AthleteStatisticsScreenName = "AthleteStatisticsScreenName";
 export const AthleteStatisticsDetailScreenName =
   "AthleteStatisticsDetailScreenName";
+export const SettingScreenName = "SettingScreenName";

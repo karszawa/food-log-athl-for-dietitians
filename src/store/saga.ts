@@ -1,6 +1,7 @@
 import { all } from "redux-saga/effects";
 import createSagaMiddleware from "redux-saga";
 import createSagaMiddlewareHelpers from "redux-saga-watch-actions";
+import { rootSaga as appSaga } from "./app/saga";
 import { rootSaga as athleteSaga } from "./athlete/saga";
 import { rootSaga as authSaga } from "./auth/saga";
 import { rootSaga as dietitianSaga } from "./dietitian/saga";
@@ -12,7 +13,7 @@ export const { injectSaga, cancelTask } = createSagaMiddlewareHelpers(runSaga);
 
 export function* rootSaga() {
   try {
-    yield all([athleteSaga(), authSaga(), dietitianSaga()]);
+    yield all([appSaga(), athleteSaga(), authSaga(), dietitianSaga()]);
   } catch (e) {
     if (extendsRequestError(e)) {
       alert(`ネットワークエラーが発生しました。エラーコード: ${e.code}`);
