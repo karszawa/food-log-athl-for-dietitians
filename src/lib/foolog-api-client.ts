@@ -14,6 +14,7 @@ import {
   GetRecordsBodyResponse,
   ResponseData,
   DeleteSessionResponse,
+  GetRecordsFoodsIdResponse,
 } from "./foolog-api-client-types";
 
 const { SECRET_KEY, APP_ID, BASE_URL } = Constants.manifest.extra;
@@ -92,6 +93,7 @@ export class FooLogAPIClient {
     const result: T = await response.json();
 
     if (!response.ok) {
+      console.log(result);
       throw new BadRequest(result.error.error_code);
     }
 
@@ -234,6 +236,26 @@ export class FooLogAPIClient {
         method: GET,
         headers: {
           "X-User-Id": props.athleteId,
+        },
+      }
+    );
+  }
+
+  // API1013
+  @logging(GET, "/records/foods/:id")
+  static getRecordsFoodsId(props: { athleteId: string; recordId: string }) {
+    const { athleteId, recordId } = props;
+    const params = {
+      size: "M",
+      expiry_sec: 900,
+    };
+
+    return this.fetch<GetRecordsFoodsIdResponse>(
+      `${BASE_URL}/records/foods/${recordId}?${qs(params)}`,
+      {
+        method: GET,
+        headers: {
+          "X-User-Id": athleteId,
         },
       }
     );

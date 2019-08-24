@@ -22,11 +22,21 @@ import {
   FetchBodyRecordsPayload,
   fetchBodyRecordsSucceeded,
   FETCH_BODY_RECORDS,
+  AddAthleteMessagePayload,
+  ADD_ATHLETE_MESSAGE,
+  fetchAthleteRecords,
+  FetchAthleteRecordPayload,
+  FETCH_ATHLETE_RECORD,
+  fetchAthleteRecordSucceeded,
 } from "./actions";
 import { db } from "../../lib/firestore";
 import { FooLogAPIClient } from "../../lib/foolog-api-client";
-import { GetRecordsDailyResponse } from "../../lib/foolog-api-client-types";
+import {
+  GetRecordsDailyResponse,
+  GetRecordsFoodsIdResponse,
+} from "../../lib/foolog-api-client-types";
 import { State } from "./reducer";
+import { Message } from "../../lib/firestore-types";
 import { RootState } from "..";
 
 // Subscribe only new messages
@@ -134,6 +144,22 @@ function* handleMessageDocumentChange(
   }
 }
 
+function* handleFetchAthleteRecord(
+  action: PayloadAction<FetchAthleteRecordPayload>
+) {
+  const result: GetRecordsFoodsIdResponse = yield call(
+    [FooLogAPIClient, FooLogAPIClient.getRecordsFoodsId],
+    action.payload
+  );
+
+  yield put(
+    fetchAthleteRecordSucceeded({
+      athleteId: action.payload.athleteId,
+      record: result,
+    })
+  );
+}
+
 // function* handleFetchAthleteRecords(
 //   action: PayloadAction<FetchAthleteRecordsPayload>
 // ) {
@@ -228,6 +254,32 @@ function* handleFetchBodyRecords(
   );
 }
 
+function* handleAddMessage(action: PayloadAction<AddAthleteMessagePayload>) {
+  const { athleteId, id, message } = action.payload;
+
+  switch (message.type) {
+    case "NEW_RECORD":
+      return yield handleNewRecordMessage(athleteId, id, message);
+  }
+}
+
+function* handleNewRecordMessage(
+  athleteId: string,
+  id: string,
+  message: Message
+) {
+  const record = select(
+    (state: RootState) => state.athlete.records[athleteId][recordId]
+  );
+
+  // if (record) {
+  //   return;
+  // }
+
+  const { recordId } = JSON.parse(message.text);
+  yield put(fetchAthleteRecords({ athleteId, recordId }));
+}
+
 export function* rootSaga() {
   yield takeEvery(SUBSCRIBE_ATHLETE_MESSAGE, handleSubscribeAthleteMessage);
   // yield takeEvery(FETCH_ATHLETE_RECORDS, handleFetchAthleteRecords);
@@ -235,4 +287,6 @@ export function* rootSaga() {
   yield takeEvery(FETCH_LATEST_RECORDS, handleFetchLatestRecords);
   yield takeEvery(FETCH_NUTRITION_AMOUNT, handleFetchNutritionAmount);
   yield takeEvery(FETCH_BODY_RECORDS, handleFetchBodyRecords);
+  yield takeEvery(ADD_ATHLETE_MESSAGE, handleAddMessage);
+  yield takeEvery(FETCH_ATHLETE_RECORD, handleFetchAthleteRecord);
 }

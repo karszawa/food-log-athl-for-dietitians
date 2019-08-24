@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { createReducer, PayloadAction } from "redux-starter-kit";
-import { Message } from "../../lib/firestore.d";
+import { Message } from "../../lib/firestore-types";
 import { NutritionTarget, Record } from "../../lib/foolog-api-client-types";
 import {
   AddAthleteMessagePayload,
@@ -17,7 +17,10 @@ import {
   UPDATE_RANGE,
   FETCH_BODY_RECORDS_SUCCEEDED,
   FetchBodyRecordsSucceededPayload,
+  FETCH_ATHLETE_RECORD_SUCCEEDED,
+  FetchAthleteRecordSucceededPayload,
 } from "./actions";
+import { FetchDietitianSuccessPayload } from "../dietitian/actions";
 
 export interface State {
   messages: {
@@ -86,6 +89,18 @@ export default createReducer(initialState, {
       delete state.messages[athleteId][id];
     }
   },
+  [FETCH_ATHLETE_RECORD_SUCCEEDED]: (
+    state: State,
+    action: PayloadAction<FetchAthleteRecordSucceededPayload>
+  ) => {
+    const { athleteId, record } = action.payload;
+
+    if (!state.records[athleteId]) {
+      state.records[athleteId] = {};
+    }
+
+    state.records[athleteId][record.id] = record;
+  },
   [ADD_ATHLETE_RECORDS]: (
     state: State,
     action: PayloadAction<AddAthleteRecordsPayload>
@@ -102,8 +117,6 @@ export default createReducer(initialState, {
   },
   [UPDATE_RANGE]: (state: State, action: PayloadAction<UpdateRangePayload>) => {
     const { athleteId, from, to } = action.payload;
-
-    console.log("update-range", from, to);
 
     state.range[athleteId] = {
       from,

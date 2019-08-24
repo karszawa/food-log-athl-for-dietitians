@@ -13,7 +13,7 @@ import { useAuthentication } from "../hooks/useAuthentication";
 import { Entry, useEntries } from "../hooks/useEntry";
 import { useMessage } from "../hooks/useMessage";
 import { useScrollToEnd } from "../hooks/useScrollToEnd";
-import { isMessage } from "../lib/firestore.d";
+import { isMessage } from "../lib/firestore-types";
 import { isRecord } from "../lib/foolog-api-client-types";
 import ThemeVariables from "../native-base-theme/variables/platform.js";
 import { AthleteStatisticsScreenName } from "../navigation/screen-names";
@@ -28,7 +28,7 @@ export const AthleteDetailScreen: NavigationScreenComponent<Params> = props => {
   const { sendMessage } = useMessage(sid, athleteId);
   const { entries, fetchMore, refreshing } = useEntries(sid, athleteId);
   const { ref: listRef, scrollToEnd } = useScrollToEnd<FlatList<ItemT>>({
-    animated: true,
+    animated: false,
   });
 
   return (

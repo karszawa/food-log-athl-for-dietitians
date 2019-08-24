@@ -153,6 +153,10 @@ export interface GetRecordsFoodsResponse extends ResponseData {
   records: Record[];
 }
 
+export interface GetRecordsFoodsIdResponse extends ResponseData, Record {
+  result: "OK";
+}
+
 export interface GetRecordsDailyResponse extends ResponseData {
   result: "OK";
   updated_at: Timestamptz;

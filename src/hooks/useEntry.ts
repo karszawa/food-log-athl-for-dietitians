@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useCallback } from "react";
-import { Message, isMessage } from "../lib/firestore.d";
+import { Message, isMessage } from "../lib/firestore-types";
 import { Record, isRecord } from "../lib/foolog-api-client-types";
 import { fetchLatestRecords } from "../store/athlete/actions";
 import { RootState } from "../store";

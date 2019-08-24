@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { Message } from "../lib/firestore.d";
+import { Message } from "../lib/firestore-types";
 
 interface Props {
   message: Message;

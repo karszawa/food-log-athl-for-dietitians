@@ -1,5 +1,5 @@
 import { createAction } from "redux-starter-kit";
-import { Message } from "../../lib/firestore.d";
+import { Message } from "../../lib/firestore-types";
 import {
   Record,
   GetUserNutritionAmountResponse,
@@ -148,3 +148,25 @@ export interface FetchBodyRecordsSucceededPayload
 export const fetchBodyRecordsSucceeded = createAction<
   FetchBodyRecordsSucceededPayload
 >(FETCH_BODY_RECORDS_SUCCEEDED);
+
+export const FETCH_ATHLETE_RECORD = "FETCH_ATHLETE_RECORD";
+
+export interface FetchAthleteRecordPayload {
+  athleteId: string;
+  recordId: string;
+}
+
+export const fetchAthleteRecords = createAction<FetchAthleteRecordPayload>(
+  FETCH_ATHLETE_RECORD
+);
+
+export const FETCH_ATHLETE_RECORD_SUCCEEDED = "FETCH_ATHLETE_RECORD_SUCCEEDED";
+
+export interface FetchAthleteRecordSucceededPayload {
+  athleteId: string;
+  record: Record;
+}
+
+export const fetchAthleteRecordSucceeded = createAction<
+  FetchAthleteRecordSucceededPayload
+>(FETCH_ATHLETE_RECORD_SUCCEEDED);
